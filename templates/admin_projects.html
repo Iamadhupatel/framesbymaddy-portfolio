@@ -1,0 +1,71 @@
+{% extends "admin_base.html" %}
+{% block title %}Projects{% endblock %}
+{% block page_title %}Projects{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h2>All Projects</h2>
+  <a href="/admin/projects/add" class="btn btn-gold">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Project
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Vimeo ID</th>
+        <th>Thumbnail</th>
+        <th>Visible</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in projects %}
+      <tr>
+        <td style="color:var(--silver)">{{ p.sort_order }}</td>
+        <td style="font-weight:500">{{ p.title }}</td>
+        <td>
+          <span class="badge" style="background:rgba(201,168,76,0.12);color:var(--gold)">{{ p.category }}</span>
+        </td>
+        <td>
+          {% if p.vimeo_id %}
+          <a href="https://vimeo.com/{{ p.vimeo_id }}" target="_blank" style="color:var(--gold);font-size:0.8rem">{{ p.vimeo_id }}</a>
+          {% else %}
+          <span style="color:var(--silver)">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if p.thumbnail %}
+          <img src="{{ p.thumbnail }}" alt="" style="width:50px;height:35px;object-fit:cover;border-radius:2px;border:1px solid rgba(201,168,76,0.15)">
+          {% else %}
+          <span style="color:var(--silver)">No image</span>
+          {% endif %}
+        </td>
+        <td>
+          <span style="color:{{ '#25D366' if p.visible else '#e05252' }}">{{ '✓ Yes' if p.visible else '✗ No' }}</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:0.4rem">
+            <a href="/admin/projects/{{ p.id }}/edit" class="btn btn-outline btn-sm">Edit</a>
+            <form method="POST" action="/admin/projects/{{ p.id }}/delete" onsubmit="return confirm('Delete this project?')">
+              <button type="submit" class="btn btn-red btn-sm">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center;color:var(--silver);padding:3rem">No projects yet. <a href="/admin/projects/add" style="color:var(--gold)">Add your first project →</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

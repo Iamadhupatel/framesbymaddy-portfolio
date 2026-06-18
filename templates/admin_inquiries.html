@@ -1,0 +1,95 @@
+{% extends "admin_base.html" %}
+{% block title %}Inquiries{% endblock %}
+{% block page_title %}Inquiries{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h2>All Inquiries</h2>
+  <span style="font-size:0.78rem;color:var(--silver)">{{ inquiries|length }} total</span>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Project Type</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inq in inquiries %}
+      <tr>
+        <td style="color:var(--silver)">{{ inq.id }}</td>
+        <td style="font-weight:500">{{ inq.name }}</td>
+        <td>
+          <a href="mailto:{{ inq.email }}" style="color:var(--gold)">{{ inq.email }}</a>
+        </td>
+        <td>{{ inq.project_type }}</td>
+        <td>
+          <div class="msg-preview" title="{{ inq.message }}">{{ inq.message }}</div>
+        </td>
+        <td>
+          <span class="badge badge-{{ 'new-status' if inq.status == 'new' else inq.status }}">{{ inq.status }}</span>
+        </td>
+        <td style="color:var(--silver);white-space:nowrap">{{ inq.created_at[:16] }}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+            <!-- Status update -->
+            <form method="POST" action="/admin/inquiries/{{ inq.id }}/status" style="display:inline">
+              <select name="status" onchange="this.form.submit()" style="padding:0.25rem 0.5rem;font-size:0.72rem;border-radius:2px;background:var(--mid4);border:1px solid rgba(201,168,76,0.2);color:var(--beige)">
+                <option value="new"     {{ 'selected' if inq.status=='new' }}>New</option>
+                <option value="read"    {{ 'selected' if inq.status=='read' }}>Read</option>
+                <option value="replied" {{ 'selected' if inq.status=='replied' }}>Replied</option>
+              </select>
+            </form>
+            <!-- WhatsApp reply -->
+            <a href="https://wa.me/{{ inq.email|replace('@','') }}" target="_blank"
+               onclick="return confirm('Open WhatsApp to reply?')"
+               class="btn btn-outline btn-sm" title="Reply on WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            </a>
+            <!-- Email reply -->
+            <a href="mailto:{{ inq.email }}?subject=Re: {{ inq.project_type }} — FramesByMaddy&body=Hi {{ inq.name }},%0D%0A%0D%0AThank you for your inquiry about {{ inq.project_type }}." class="btn btn-outline btn-sm">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </a>
+            <!-- Delete -->
+            <form method="POST" action="/admin/inquiries/{{ inq.id }}/delete" style="display:inline" onsubmit="return confirm('Delete this inquiry?')">
+              <button type="submit" class="btn btn-red btn-sm">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" style="text-align:center;color:var(--silver);padding:3rem">
+          No inquiries yet. They'll appear here when visitors submit the contact form on your portfolio.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Full message expander -->
+<script>
+document.querySelectorAll('.msg-preview').forEach(el => {
+  el.style.cursor = 'pointer';
+  el.addEventListener('click', () => {
+    if(el.style.whiteSpace === 'normal') {
+      el.style.whiteSpace = 'nowrap'; el.style.maxWidth = '300px';
+    } else {
+      el.style.whiteSpace = 'normal'; el.style.maxWidth = '400px';
+    }
+  });
+  el.title = 'Click to expand message';
+});
+</script>
+{% endblock %}

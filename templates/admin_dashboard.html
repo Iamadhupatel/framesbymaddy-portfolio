@@ -1,0 +1,79 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-card-num">{{ new_count }}</div>
+    <div class="stat-card-label">New Inquiries</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-num">{{ inquiry_count }}</div>
+    <div class="stat-card-label">Total Inquiries</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-num">{{ project_count }}</div>
+    <div class="stat-card-label">Projects</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-num">{{ photo_count }}</div>
+    <div class="stat-card-label">Photos</div>
+  </div>
+</div>
+
+<div class="section-head">
+  <h2>Recent Inquiries</h2>
+  <a href="/admin/inquiries" class="btn btn-outline">View All</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inq in recent_inquiries %}
+      <tr>
+        <td style="color:var(--silver)">{{ inq.id }}</td>
+        <td style="font-weight:500">{{ inq.name }}</td>
+        <td style="color:var(--silver)">{{ inq.email }}</td>
+        <td>{{ inq.project_type }}</td>
+        <td>
+          <span class="badge badge-{{ inq.status if inq.status != 'new' else 'new-status' }}">{{ inq.status }}</span>
+        </td>
+        <td style="color:var(--silver)">{{ inq.created_at[:10] }}</td>
+        <td>
+          <a href="/admin/inquiries" class="btn btn-outline btn-sm">View</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center;color:var(--silver);padding:2rem">No inquiries yet. They'll appear here when visitors submit the contact form.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div style="margin-top:2.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+  <a href="/admin/projects/add" class="btn btn-gold" style="justify-content:center">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Project
+  </a>
+  <a href="/admin/photos/add" class="btn btn-gold" style="justify-content:center">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Photo
+  </a>
+  <a href="/admin/settings" class="btn btn-outline" style="justify-content:center">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Site Settings
+  </a>
+</div>
+{% endblock %}

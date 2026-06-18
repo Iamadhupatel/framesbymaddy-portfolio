@@ -1,0 +1,77 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ 'Edit' if photo else 'Add' }} Photo{% endblock %}
+{% block page_title %}{{ 'Edit' if photo else 'Add' }} Photo{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:1.5rem">
+  <a href="/admin/photos" class="btn btn-outline btn-sm">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Photos
+  </a>
+</div>
+
+<div class="form-section">
+  <form method="POST">
+    <div class="form-row full">
+      <div class="form-group">
+        <label for="image_url">Image URL *</label>
+        <input type="url" id="image_url" name="image_url" value="{{ photo.image_url if photo else '' }}"
+               placeholder="https://your-cdn.com/photo.jpg" required
+               oninput="document.getElementById('preview').src=this.value">
+        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Paste a direct image URL (Unsplash, Google Drive direct link, or your own CDN)</span>
+      </div>
+    </div>
+
+    {% if photo and photo.image_url %}
+    <div style="margin-bottom:1.25rem">
+      <img id="preview" src="{{ photo.image_url }}" alt="Preview"
+           style="max-height:200px;border-radius:4px;border:1px solid rgba(201,168,76,0.15)">
+    </div>
+    {% else %}
+    <div style="margin-bottom:1.25rem">
+      <img id="preview" src="" alt="" style="max-height:200px;border-radius:4px;border:1px solid rgba(201,168,76,0.15);display:none"
+           onerror="this.style.display='none'" onload="this.style.display='block'">
+    </div>
+    {% endif %}
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" name="category">
+          {% set cats = ['portrait','event','street','lifestyle','product'] %}
+          {% for cat in cats %}
+          <option value="{{ cat }}" {{ 'selected' if photo and photo.category == cat }}>{{ cat|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sort_order">Sort Order</label>
+        <input type="number" id="sort_order" name="sort_order" value="{{ photo.sort_order if photo else 99 }}" min="1">
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div class="form-group">
+        <label for="title">Caption (optional)</label>
+        <input type="text" id="title" name="title" value="{{ photo.title if photo else '' }}" placeholder="Portrait Session — Studio Light">
+      </div>
+    </div>
+
+    {% if photo %}
+    <div class="form-row full">
+      <div class="form-group">
+        <div class="checkbox-row">
+          <input type="checkbox" id="visible" name="visible" {{ 'checked' if photo.visible }}>
+          <label for="visible">Visible in gallery</label>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button type="submit" class="btn btn-gold">{{ 'Save Changes' if photo else 'Add Photo' }}</button>
+      <a href="/admin/photos" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

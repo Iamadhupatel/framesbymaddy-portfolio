@@ -1,0 +1,69 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ 'Edit' if t else 'Add' }} Testimonial{% endblock %}
+{% block page_title %}{{ 'Edit' if t else 'Add' }} Testimonial{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:1.5rem">
+  <a href="/admin/testimonials" class="btn btn-outline btn-sm">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Testimonials
+  </a>
+</div>
+
+<div class="form-section">
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="client_name">Client Name *</label>
+        <input type="text" id="client_name" name="client_name" value="{{ t.client_name if t else '' }}" placeholder="Aditya Reddy" required>
+      </div>
+      <div class="form-group">
+        <label for="initials">Initials (avatar) *</label>
+        <input type="text" id="initials" name="initials" value="{{ t.initials if t else '' }}" placeholder="AR" maxlength="3" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="client_role">Client Role / Description</label>
+        <input type="text" id="client_role" name="client_role" value="{{ t.client_role if t else '' }}" placeholder="Content Creator, 150K followers">
+      </div>
+      <div class="form-group">
+        <label for="stars">Star Rating</label>
+        <select id="stars" name="stars">
+          {% for i in [5,4,3,2,1] %}
+          <option value="{{ i }}" {{ 'selected' if t and t.stars == i }}>{{ '★' * i }} ({{ i }})</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div class="form-group">
+        <label for="review_text">Review Text *</label>
+        <textarea id="review_text" name="review_text" placeholder="Write the client's review here…" required>{{ t.review_text if t else '' }}</textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="sort_order">Sort Order</label>
+        <input type="number" id="sort_order" name="sort_order" value="{{ t.sort_order if t else 99 }}" min="1">
+      </div>
+      {% if t %}
+      <div class="form-group" style="justify-content:flex-end">
+        <div class="checkbox-row" style="margin-top:auto;padding-bottom:0.2rem">
+          <input type="checkbox" id="visible" name="visible" {{ 'checked' if t.visible }}>
+          <label for="visible">Visible on portfolio</label>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button type="submit" class="btn btn-gold">{{ 'Save Changes' if t else 'Add Testimonial' }}</button>
+      <a href="/admin/testimonials" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

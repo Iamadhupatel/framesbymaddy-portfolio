@@ -1,0 +1,44 @@
+{% extends "admin_base.html" %}
+{% block title %}Photos{% endblock %}
+{% block page_title %}Photography Gallery{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h2>All Photos</h2>
+  <a href="/admin/photos/add" class="btn btn-gold">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Photo
+  </a>
+</div>
+
+{% if photos %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem">
+  {% for ph in photos %}
+  <div style="background:var(--mid3);border:1px solid rgba(201,168,76,0.1);border-radius:4px;overflow:hidden">
+    <div style="position:relative;padding-top:70%">
+      <img src="{{ ph.image_url }}" alt="{{ ph.title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      {% if not ph.visible %}
+      <div style="position:absolute;top:0.5rem;right:0.5rem;background:rgba(224,82,82,0.8);color:#fff;font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:2px">Hidden</div>
+      {% endif %}
+    </div>
+    <div style="padding:0.85rem">
+      <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem">{{ ph.category }}</div>
+      <div style="font-size:0.82rem;font-weight:500;margin-bottom:0.75rem">{{ ph.title or '—' }}</div>
+      <div style="display:flex;gap:0.4rem">
+        <a href="/admin/photos/{{ ph.id }}/edit" class="btn btn-outline btn-sm">Edit</a>
+        <form method="POST" action="/admin/photos/{{ ph.id }}/delete" onsubmit="return confirm('Delete this photo?')">
+          <button type="submit" class="btn btn-red btn-sm">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="table-wrap" style="padding:3rem;text-align:center;color:var(--silver)">
+  No photos yet. <a href="/admin/photos/add" style="color:var(--gold)">Add your first photo →</a>
+</div>
+{% endif %}
+{% endblock %}

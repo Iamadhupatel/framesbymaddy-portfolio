@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — FramesByMaddy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root { --mid:#080808; --mid3:#1a1a1a; --beige:#F0E6D3; --silver:#8A8A8A; --gold:#C9A84C; --gold-l:#E2C06A; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--mid); color:var(--beige); font-family:'Inter',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,76,0.04), transparent);
+}
+.login-box {
+  width:min(420px, 92vw);
+  background:var(--mid3); border:1px solid rgba(201,168,76,0.15);
+  border-radius:4px; padding:2.5rem;
+}
+.login-logo {
+  font-family:'Poppins',sans-serif; font-size:1.4rem; font-weight:700;
+  text-align:center; margin-bottom:0.4rem;
+}
+.login-logo span { color:var(--gold); }
+.login-sub { text-align:center; font-size:0.78rem; color:var(--silver); margin-bottom:2rem; letter-spacing:0.08em; text-transform:uppercase; }
+.gold-line { display:block; width:2.5rem; height:1.5px; background:var(--gold); margin:0 auto 2rem; }
+.form-group { margin-bottom:1.25rem; }
+label { display:block; font-size:0.68rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--silver); margin-bottom:0.45rem; }
+input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(201,168,76,0.15); border-radius:2px; padding:0.75rem 1rem; color:var(--beige); font-family:'Inter',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s; }
+input:focus { border-color:var(--gold); }
+input::placeholder { color:var(--silver); opacity:0.5; }
+.btn-login { width:100%; background:var(--gold); color:var(--mid); font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:600; padding:0.85rem; border:none; border-radius:2px; cursor:pointer; transition:background 0.2s; letter-spacing:0.05em; margin-top:0.5rem; }
+.btn-login:hover { background:var(--gold-l); }
+.error { background:rgba(224,82,82,0.1); border:1px solid rgba(224,82,82,0.25); color:#F08080; padding:0.7rem 1rem; border-radius:2px; font-size:0.82rem; margin-bottom:1rem; }
+.hint { text-align:center; margin-top:1.5rem; font-size:0.75rem; color:var(--silver); }
+.hint span { color:var(--gold); }
+</style>
+</head>
+<body>
+<div class="login-box">
+  <div class="login-logo">Frames<span>By</span>Maddy</div>
+  <div class="login-sub">Admin Panel</div>
+  <span class="gold-line"></span>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}<div class="error">{{ msg }}</div>{% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="admin" required autofocus>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn-login">Sign In</button>
+  </form>
+
+  <div class="hint">Default: <span>admin</span> / <span>maddy2026</span></div>
+</div>
+</body>
+</html>

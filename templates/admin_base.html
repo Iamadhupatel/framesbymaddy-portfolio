@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Admin{% endblock %} — FramesByMaddy</title>
+<style>
+:root {
+  --mid: #080808; --mid2: #111; --mid3: #1a1a1a; --mid4: #242424;
+  --beige: #F0E6D3; --silver: #8A8A8A; --gold: #C9A84C; --gold-l: #E2C06A;
+  --green: #25D366; --red: #e05252; --blue: #5b9bd5;
+  --font: 'Inter', sans-serif; --font-d: 'Poppins', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--mid); color: var(--beige); font-family: var(--font); font-size: 14px; display: flex; min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px; flex-shrink: 0;
+  background: var(--mid2);
+  border-right: 1px solid rgba(201,168,76,0.08);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  padding: 0 0 2rem;
+}
+.sidebar-logo {
+  padding: 1.5rem 1.5rem 1rem;
+  font-family: var(--font-d); font-weight: 700; font-size: 1rem;
+  color: var(--beige); border-bottom: 1px solid rgba(201,168,76,0.08);
+  margin-bottom: 1rem;
+}
+.sidebar-logo span { color: var(--gold); }
+.sidebar-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--silver);
+  padding: 0.5rem 1.5rem; margin-top: 0.5rem;
+}
+.sidebar a {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.7rem 1.5rem; color: var(--silver);
+  font-size: 0.82rem; font-weight: 500;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+}
+.sidebar a:hover, .sidebar a.active {
+  color: var(--gold); background: rgba(201,168,76,0.06);
+  border-left-color: var(--gold);
+}
+.sidebar a svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; }
+.sidebar-bottom { margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid rgba(201,168,76,0.08); }
+.sidebar-bottom a { display: flex; align-items: center; gap: 0.6rem; color: var(--silver); font-size: 0.8rem; padding: 0.5rem 0; }
+.sidebar-bottom a:hover { color: var(--beige); }
+.sidebar-bottom svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* MAIN */
+.main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar {
+  background: var(--mid2); border-bottom: 1px solid rgba(201,168,76,0.08);
+  padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar h1 { font-family: var(--font-d); font-size: 1.1rem; font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.badge-new {
+  background: var(--gold); color: var(--mid);
+  font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem;
+  border-radius: 99px; letter-spacing: 0.05em;
+}
+.content { padding: 2rem; flex: 1; }
+
+/* CARDS */
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card {
+  background: var(--mid3); border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px; padding: 1.5rem;
+}
+.stat-card-num { font-family: var(--font-d); font-size: 2rem; font-weight: 800; color: var(--gold); }
+.stat-card-label { font-size: 0.75rem; color: var(--silver); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* TABLE */
+.table-wrap { background: var(--mid3); border: 1px solid rgba(201,168,76,0.1); border-radius: 4px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: var(--mid4); padding: 0.8rem 1rem; text-align: left;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--silver);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+td {
+  padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 0.82rem; color: var(--beige); vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(201,168,76,0.02); }
+
+/* STATUS BADGES */
+.badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 2px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.badge-new-status { background: rgba(201,168,76,0.15); color: var(--gold); }
+.badge-read { background: rgba(91,155,213,0.15); color: var(--blue); }
+.badge-replied { background: rgba(37,211,102,0.15); color: var(--green); }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 2px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; font-family: var(--font); }
+.btn-gold { background: var(--gold); color: var(--mid); }
+.btn-gold:hover { background: var(--gold-l); }
+.btn-outline { background: transparent; border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+.btn-outline:hover { background: rgba(201,168,76,0.1); }
+.btn-red { background: rgba(224,82,82,0.15); border: 1px solid rgba(224,82,82,0.3); color: var(--red); }
+.btn-red:hover { background: rgba(224,82,82,0.25); }
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.72rem; }
+.btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+/* FORMS */
+.form-section { background: var(--mid3); border: 1px solid rgba(201,168,76,0.1); border-radius: 4px; padding: 2rem; max-width: 700px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 0.45rem; }
+label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver); }
+input[type=text], input[type=url], input[type=number], input[type=email], textarea, select {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 2px; padding: 0.65rem 0.85rem; color: var(--beige);
+  font-family: var(--font); font-size: 0.85rem; outline: none;
+  transition: border-color 0.2s; width: 100%;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+input::placeholder, textarea::placeholder { color: var(--silver); opacity: 0.5; }
+select option { background: var(--mid3); }
+textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.checkbox-row { display: flex; align-items: center; gap: 0.6rem; }
+.checkbox-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--gold); }
+.checkbox-row label { text-transform: none; letter-spacing: 0; font-size: 0.82rem; color: var(--beige); }
+
+/* ALERTS */
+.flash { padding: 0.85rem 1.25rem; border-radius: 2px; margin-bottom: 1.5rem; font-size: 0.85rem; }
+.flash-success { background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.25); color: #7DEFA5; }
+.flash-error   { background: rgba(224,82,82,0.1);  border: 1px solid rgba(224,82,82,0.25);  color: #F08080; }
+
+/* SECTION HEADER */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.section-head h2 { font-family: var(--font-d); font-size: 1rem; font-weight: 600; }
+
+/* MESSAGE PREVIEW */
+.msg-preview { max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--silver); }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+  .sidebar { width: 200px; }
+  .main { margin-left: 200px; }
+  .form-row { grid-template-columns: 1fr; }
+  .stat-cards { grid-template-columns: 1fr 1fr; }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">Frames<span>By</span>Maddy</div>
+
+  <div class="sidebar-label">Menu</div>
+  <a href="/admin" class="{{ 'active' if request.path == '/admin' else '' }}">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </a>
+  <a href="/admin/inquiries" class="{{ 'active' if '/inquiries' in request.path else '' }}">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Inquiries
+    {% if new_count is defined and new_count %}<span class="badge-new" style="background:var(--gold);color:#080808;font-size:0.6rem;padding:0.1rem 0.4rem;border-radius:99px;margin-left:auto">{{ new_count }}</span>{% endif %}
+  </a>
+  <a href="/admin/projects" class="{{ 'active' if '/projects' in request.path else '' }}">
+    <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+    Projects
+  </a>
+  <a href="/admin/photos" class="{{ 'active' if '/photos' in request.path else '' }}">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    Photos
+  </a>
+  <a href="/admin/testimonials" class="{{ 'active' if '/testimonials' in request.path else '' }}">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/><circle cx="9" cy="7" r="4"/></svg>
+    Testimonials
+  </a>
+  <a href="/admin/settings" class="{{ 'active' if '/settings' in request.path else '' }}">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
+  </a>
+
+  <div class="sidebar-label" style="margin-top:1rem">Site</div>
+  <a href="/" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+    View Portfolio
+  </a>
+
+  <div class="sidebar-bottom">
+    <a href="/admin/logout">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+    <div class="topbar-right">
+      <span style="font-size:0.75rem;color:var(--silver)">👤 Admin</span>
+    </div>
+  </div>
+
+  <div class="content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash flash-success">✅ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+</body>
+</html>

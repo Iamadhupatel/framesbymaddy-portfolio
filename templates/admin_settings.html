@@ -1,0 +1,89 @@
+{% extends "admin_base.html" %}
+{% block title %}Settings{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="form-section" style="max-width:900px">
+  <form method="POST">
+
+    <div style="margin-bottom:2rem">
+      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(201,168,76,0.1)">📹 Video IDs (Vimeo)</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hero_vimeo_id">Hero Background Video ID</label>
+          <input type="text" id="hero_vimeo_id" name="hero_vimeo_id" value="{{ settings.hero_vimeo_id }}" placeholder="1200231066">
+          <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Full-screen background behind hero text</span>
+        </div>
+        <div class="form-group">
+          <label for="showreel_vimeo_id">Featured Showreel Video ID</label>
+          <input type="text" id="showreel_vimeo_id" name="showreel_vimeo_id" value="{{ settings.showreel_vimeo_id }}" placeholder="1199859781">
+          <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Showreel section main video</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ba_before_vimeo_id">Before/After — BEFORE Video ID</label>
+          <input type="text" id="ba_before_vimeo_id" name="ba_before_vimeo_id" value="{{ settings.ba_before_vimeo_id }}" placeholder="1199859780">
+        </div>
+        <div class="form-group">
+          <label for="ba_after_vimeo_id">Before/After — AFTER Video ID</label>
+          <input type="text" id="ba_after_vimeo_id" name="ba_after_vimeo_id" value="{{ settings.ba_after_vimeo_id }}" placeholder="1199859781">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(201,168,76,0.1)">📬 Contact Info</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="whatsapp_number">WhatsApp Number (with country code, no +)</label>
+          <input type="text" id="whatsapp_number" name="whatsapp_number" value="{{ settings.whatsapp_number }}" placeholder="917093474065">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" value="{{ settings.email }}" placeholder="framesbymaddy.49@gmail.com">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label for="instagram_url">Instagram Profile URL</label>
+          <input type="url" id="instagram_url" name="instagram_url" value="{{ settings.instagram_url }}" placeholder="https://www.instagram.com/frames.bymaddy">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(201,168,76,0.1)">📊 Stats Bar Numbers</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="stats_projects">Projects Completed</label>
+          <input type="text" id="stats_projects" name="stats_projects" value="{{ settings.stats_projects }}" placeholder="50+">
+        </div>
+        <div class="form-group">
+          <label for="stats_clients">Happy Clients</label>
+          <input type="text" id="stats_clients" name="stats_clients" value="{{ settings.stats_clients }}" placeholder="30+">
+        </div>
+        <div class="form-group">
+          <label for="stats_experience">Years Experience</label>
+          <input type="text" id="stats_experience" name="stats_experience" value="{{ settings.stats_experience }}" placeholder="3+">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(201,168,76,0.1)">✏️ Brand</div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label for="tagline">Tagline</label>
+          <input type="text" id="tagline" name="tagline" value="{{ settings.tagline }}" placeholder="Capturing Stories Through Frames.">
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-gold" style="padding:0.75rem 2rem;font-size:0.9rem">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save All Settings
+    </button>
+  </form>
+</div>
+{% endblock %}

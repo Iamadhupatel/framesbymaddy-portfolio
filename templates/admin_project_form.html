@@ -1,0 +1,70 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ 'Edit' if project else 'Add' }} Project{% endblock %}
+{% block page_title %}{{ 'Edit' if project else 'Add' }} Project{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:1.5rem">
+  <a href="/admin/projects" class="btn btn-outline btn-sm">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Projects
+  </a>
+</div>
+
+<div class="form-section">
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Project Title *</label>
+        <input type="text" id="title" name="title" value="{{ project.title if project else '' }}" placeholder="Instagram Reel — Brand Showcase" required>
+      </div>
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" name="category">
+          {% set cats = ['reel','commercial','event','lifestyle','cinematic'] %}
+          {% for cat in cats %}
+          <option value="{{ cat }}" {{ 'selected' if project and project.category == cat }}>{{ cat|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="vimeo_id">Vimeo Video ID</label>
+        <input type="text" id="vimeo_id" name="vimeo_id" value="{{ project.vimeo_id if project else '' }}" placeholder="123456789">
+        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">From: vimeo.com/<strong>123456789</strong></span>
+      </div>
+      <div class="form-group">
+        <label for="sort_order">Sort Order</label>
+        <input type="number" id="sort_order" name="sort_order" value="{{ project.sort_order if project else 99 }}" min="1" max="999">
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div class="form-group">
+        <label for="thumbnail">Thumbnail Image URL</label>
+        <input type="url" id="thumbnail" name="thumbnail" value="{{ project.thumbnail if project else '' }}" placeholder="https://your-image.com/thumb.jpg">
+        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Paste a direct image URL. Leave blank to show default icon.</span>
+      </div>
+    </div>
+
+    {% if project %}
+    <div class="form-row full">
+      <div class="form-group">
+        <div class="checkbox-row">
+          <input type="checkbox" id="visible" name="visible" {{ 'checked' if project.visible }}>
+          <label for="visible">Visible on portfolio</label>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button type="submit" class="btn btn-gold">
+        {{ 'Save Changes' if project else 'Add Project' }}
+      </button>
+      <a href="/admin/projects" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

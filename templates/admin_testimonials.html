@@ -1,0 +1,64 @@
+{% extends "admin_base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block page_title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h2>All Testimonials</h2>
+  <a href="/admin/testimonials/add" class="btn btn-gold">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Testimonial
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Client</th>
+        <th>Role</th>
+        <th>Stars</th>
+        <th>Review (preview)</th>
+        <th>Visible</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in testimonials %}
+      <tr>
+        <td style="color:var(--silver)">{{ t.sort_order }}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:0.6rem">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--gold);flex-shrink:0">{{ t.initials }}</div>
+            <span style="font-weight:500">{{ t.client_name }}</span>
+          </div>
+        </td>
+        <td style="color:var(--silver)">{{ t.client_role }}</td>
+        <td style="color:var(--gold)">{{ '★' * t.stars }}</td>
+        <td><div class="msg-preview">{{ t.review_text }}</div></td>
+        <td>
+          <span style="color:{{ '#25D366' if t.visible else '#e05252' }}">{{ '✓ Yes' if t.visible else '✗ No' }}</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:0.4rem">
+            <a href="/admin/testimonials/{{ t.id }}/edit" class="btn btn-outline btn-sm">Edit</a>
+            <form method="POST" action="/admin/testimonials/{{ t.id }}/delete" onsubmit="return confirm('Delete this testimonial?')">
+              <button type="submit" class="btn btn-red btn-sm">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center;color:var(--silver);padding:3rem">
+          No testimonials yet. <a href="/admin/testimonials/add" style="color:var(--gold)">Add one →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
