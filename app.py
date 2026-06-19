@@ -570,7 +570,7 @@ def admin_delete_testimonial(tid):
 def admin_settings():
     conn = get_db()
     if request.method == "POST":
-        keys = ["showreel_vimeo_id","hero_vimeo_id","ba_before_vimeo_id","ba_after_vimeo_id",
+        keys = ["showreel_vimeo_id","showreel_thumbnail","hero_vimeo_id","ba_before_vimeo_id","ba_after_vimeo_id",
                 "whatsapp_number","instagram_url","email","tagline",
                 "stats_projects","stats_clients","stats_experience"]
         for k in keys:
