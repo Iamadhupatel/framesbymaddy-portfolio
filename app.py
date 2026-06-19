@@ -584,6 +584,8 @@ def admin_settings():
     conn.close()
     return render_template("admin_settings.html", settings=settings)
 
+# Initialize database for Render/Gunicorn
+init_db()
 
 # ─────────────────────────────────────────────
 # ENTRY POINT
