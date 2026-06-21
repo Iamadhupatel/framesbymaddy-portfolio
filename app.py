@@ -8,6 +8,7 @@ Visit: http://localhost:5000
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from urllib.parse import urlparse
 import sqlite3, os, hashlib, datetime, json
+import shutil
 
 app = Flask(
     __name__,
@@ -40,6 +41,7 @@ DB_PATH = os.path.join(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PROJECTS_JSON_PATH = os.path.join(DATA_DIR, "projects.json")
+PROJECTS_BACKUP_PATH = os.path.join(DATA_DIR, "projects.backup.json")
 
 DEFAULT_PROJECTS = [
     {
@@ -151,9 +153,33 @@ def write_projects(projects):
         normalize_project(project, index + 1)
         for index, project in enumerate(projects)
     ]
+    backup_projects_file()
     with open(PROJECTS_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(normalized, f, indent=2, ensure_ascii=False)
         f.write("\n")
+
+def backup_projects_file():
+    if os.path.exists(PROJECTS_JSON_PATH):
+        try:
+            data = read_projects_file(PROJECTS_JSON_PATH)
+        except (OSError, json.JSONDecodeError, ValueError):
+            return
+        os.makedirs(DATA_DIR, exist_ok=True)
+        shutil.copy2(PROJECTS_JSON_PATH, PROJECTS_BACKUP_PATH)
+
+def read_projects_file(path):
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, list):
+        raise ValueError("Project data must be a JSON list.")
+    return data
+
+def restore_projects_from_backup():
+    if not os.path.exists(PROJECTS_BACKUP_PATH):
+        raise FileNotFoundError("Project data is corrupted and no backup exists.")
+    raw_projects = read_projects_file(PROJECTS_BACKUP_PATH)
+    shutil.copy2(PROJECTS_BACKUP_PATH, PROJECTS_JSON_PATH)
+    return raw_projects
 
 def ensure_projects_file():
     if not os.path.exists(PROJECTS_JSON_PATH):
@@ -161,11 +187,10 @@ def ensure_projects_file():
 
 def load_projects(include_hidden=False):
     ensure_projects_file()
-    with open(PROJECTS_JSON_PATH, "r", encoding="utf-8") as f:
-        raw_projects = json.load(f)
-
-    if not isinstance(raw_projects, list):
-        raw_projects = []
+    try:
+        raw_projects = read_projects_file(PROJECTS_JSON_PATH)
+    except (OSError, json.JSONDecodeError, ValueError):
+        raw_projects = restore_projects_from_backup()
 
     projects = [
         normalize_project(project, index + 1)
