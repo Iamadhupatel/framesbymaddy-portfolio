@@ -27,24 +27,6 @@ CREATE TABLE IF NOT EXISTS inquiries (
 );
 
 -- ─────────────────────────────────────────────
--- TABLE: projects
--- Video projects shown in the Work section
--- ─────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS projects (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT    NOT NULL,
-    category    TEXT    NOT NULL
-                        CHECK (category IN ('reel','commercial','event','lifestyle','cinematic')),
-    thumbnail   TEXT,               -- Direct image URL or empty (shows emoji placeholder)
-    vimeo_id    TEXT,               -- Vimeo video ID (digits only, e.g. "1199859781")
-    sort_order  INTEGER DEFAULT 0,  -- Lower = appears first
-    visible     INTEGER DEFAULT 1   -- 1 = shown, 0 = hidden
-                        CHECK (visible IN (0,1)),
-    created_at  TEXT    NOT NULL
-                        DEFAULT (datetime('now','localtime'))
-);
-
--- ─────────────────────────────────────────────
 -- TABLE: photos
 -- Photography portfolio gallery (masonry grid)
 -- ─────────────────────────────────────────────
@@ -123,8 +105,6 @@ CREATE TABLE IF NOT EXISTS admin_users (
 -- ─────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_inquiries_status     ON inquiries   (status);
 CREATE INDEX IF NOT EXISTS idx_inquiries_created    ON inquiries   (created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_projects_category    ON projects    (category);
-CREATE INDEX IF NOT EXISTS idx_projects_visible     ON projects    (visible, sort_order);
 CREATE INDEX IF NOT EXISTS idx_photos_category      ON photos      (category);
 CREATE INDEX IF NOT EXISTS idx_photos_visible       ON photos      (visible, sort_order);
 CREATE INDEX IF NOT EXISTS idx_testimonials_visible ON testimonials(visible, sort_order);

@@ -6,6 +6,7 @@ Visit: http://localhost:5000
 """
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from urllib.parse import urlparse
 import sqlite3, os, hashlib, datetime, json
 
 app = Flask(
@@ -36,6 +37,66 @@ DB_PATH = os.path.join(
     "framesbymaddy.db"
 
 )
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+PROJECTS_JSON_PATH = os.path.join(DATA_DIR, "projects.json")
+
+DEFAULT_PROJECTS = [
+    {
+        "id": 1,
+        "title": "Instagram Reel — Brand Showcase",
+        "category": "reel",
+        "thumbnail": "",
+        "vimeo_id": "1199859781",
+        "sort_order": 1,
+        "visible": 1,
+    },
+    {
+        "id": 2,
+        "title": "Cinematic Short Film",
+        "category": "cinematic",
+        "thumbnail": "",
+        "vimeo_id": "1199859781",
+        "sort_order": 2,
+        "visible": 1,
+    },
+    {
+        "id": 3,
+        "title": "Product Commercial — Launch",
+        "category": "commercial",
+        "thumbnail": "",
+        "vimeo_id": "",
+        "sort_order": 3,
+        "visible": 1,
+    },
+    {
+        "id": 4,
+        "title": "Wedding Highlights Film",
+        "category": "event",
+        "thumbnail": "",
+        "vimeo_id": "",
+        "sort_order": 4,
+        "visible": 1,
+    },
+    {
+        "id": 5,
+        "title": "Creator Content Package",
+        "category": "lifestyle",
+        "thumbnail": "",
+        "vimeo_id": "",
+        "sort_order": 5,
+        "visible": 1,
+    },
+    {
+        "id": 6,
+        "title": "YouTube Shorts Series",
+        "category": "reel",
+        "thumbnail": "",
+        "vimeo_id": "",
+        "sort_order": 6,
+        "visible": 1,
+    },
+]
 print("Current Working Directory:", os.getcwd())
 print("App File Directory:", os.path.dirname(os.path.abspath(__file__)))
 print("Templates Folder Exists:", os.path.exists("templates"))
@@ -48,6 +109,77 @@ def get_db():
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     return conn
+
+def normalize_project(project, fallback_id):
+    def to_int(value, default=0):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return default
+
+    return {
+        "id": to_int(project.get("id"), fallback_id),
+        "title": (project.get("title") or "").strip(),
+        "category": (project.get("category") or "").strip(),
+        "thumbnail": (project.get("thumbnail") or "").strip(),
+        "vimeo_id": extract_vimeo_id(project.get("vimeo_id")),
+        "sort_order": to_int(project.get("sort_order"), 0),
+        "visible": 1 if str(project.get("visible", 1)).lower() in ("1", "true", "yes", "on") else 0,
+    }
+
+def extract_vimeo_id(value):
+    value = (value or "").strip()
+    if not value:
+        return ""
+
+    if value.isdigit():
+        return value
+
+    parsed = urlparse(value)
+    if "vimeo.com" not in parsed.netloc.lower():
+        return value
+
+    for part in reversed(parsed.path.split("/")):
+        if part.isdigit():
+            return part
+
+    return ""
+
+def write_projects(projects):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    normalized = [
+        normalize_project(project, index + 1)
+        for index, project in enumerate(projects)
+    ]
+    with open(PROJECTS_JSON_PATH, "w", encoding="utf-8") as f:
+        json.dump(normalized, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+def ensure_projects_file():
+    if not os.path.exists(PROJECTS_JSON_PATH):
+        write_projects(DEFAULT_PROJECTS)
+
+def load_projects(include_hidden=False):
+    ensure_projects_file()
+    with open(PROJECTS_JSON_PATH, "r", encoding="utf-8") as f:
+        raw_projects = json.load(f)
+
+    if not isinstance(raw_projects, list):
+        raw_projects = []
+
+    projects = [
+        normalize_project(project, index + 1)
+        for index, project in enumerate(raw_projects)
+        if isinstance(project, dict)
+    ]
+    if not include_hidden:
+        projects = [project for project in projects if project["visible"]]
+    return sorted(projects, key=lambda project: (project["sort_order"], project["id"]))
+
+def next_project_id(projects):
+    if not projects:
+        return 1
+    return max(project["id"] for project in projects) + 1
 
 def init_db():
     """Create all tables and seed initial data."""
@@ -63,20 +195,6 @@ def init_db():
             project_type TEXT   NOT NULL,
             message     TEXT    NOT NULL,
             status      TEXT    NOT NULL DEFAULT 'new',   -- new | read | replied
-            created_at  TEXT    NOT NULL DEFAULT (datetime('now','localtime'))
-        )
-    """)
-
-    # ── PROJECTS (Work section) ────────────────────────────────
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS projects (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            title       TEXT    NOT NULL,
-            category    TEXT    NOT NULL,
-            thumbnail   TEXT,                  -- image URL or base64
-            vimeo_id    TEXT,                  -- Vimeo video ID
-            sort_order  INTEGER DEFAULT 0,
-            visible     INTEGER DEFAULT 1,
             created_at  TEXT    NOT NULL DEFAULT (datetime('now','localtime'))
         )
     """)
@@ -192,21 +310,6 @@ def init_db():
             "INSERT INTO testimonials (client_name, client_role, initials, review_text, stars, sort_order) VALUES (?,?,?,?,?,?)",
             testimonials)
 
-    # Default projects
-    c.execute("SELECT COUNT(*) FROM projects")
-    if c.fetchone()[0] == 0:
-        projects = [
-            ("Instagram Reel — Brand Showcase", "reel", "", "1199859781", 1),
-            ("Cinematic Short Film", "cinematic", "", "1199859781", 2),
-            ("Product Commercial — Launch", "commercial", "", "", 3),
-            ("Wedding Highlights Film", "event", "", "", 4),
-            ("Creator Content Package", "lifestyle", "", "", 5),
-            ("YouTube Shorts Series", "reel", "", "", 6),
-        ]
-        c.executemany(
-            "INSERT INTO projects (title, category, thumbnail, vimeo_id, sort_order) VALUES (?,?,?,?,?)",
-            projects)
-
     # Default site settings
     defaults = {
         "showreel_vimeo_id":    "1199859781",
@@ -226,6 +329,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+    ensure_projects_file()
     print("✅ Database initialised:", DB_PATH)
 
 
@@ -255,7 +359,7 @@ def require_admin(f):
 def index():
     conn = get_db()
     settings     = get_settings()
-    projects     = conn.execute("SELECT * FROM projects WHERE visible=1 ORDER BY sort_order").fetchall()
+    projects     = load_projects()
     photos       = conn.execute("SELECT * FROM photos   WHERE visible=1 ORDER BY sort_order").fetchall()
     testimonials = conn.execute("SELECT * FROM testimonials WHERE visible=1 ORDER BY sort_order").fetchall()
     services     = conn.execute("SELECT * FROM services WHERE visible=1 ORDER BY sort_order").fetchall()
@@ -350,7 +454,7 @@ def admin_dashboard():
     conn = get_db()
     inquiry_count  = conn.execute("SELECT COUNT(*) FROM inquiries").fetchone()[0]
     new_count      = conn.execute("SELECT COUNT(*) FROM inquiries WHERE status='new'").fetchone()[0]
-    project_count  = conn.execute("SELECT COUNT(*) FROM projects").fetchone()[0]
+    project_count  = len(load_projects(include_hidden=True))
     photo_count    = conn.execute("SELECT COUNT(*) FROM photos").fetchone()[0]
     recent_inquiries = conn.execute(
         "SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 5"
@@ -402,53 +506,57 @@ def delete_inquiry(inquiry_id):
 @app.route("/admin/projects")
 @require_admin
 def admin_projects():
-    conn = get_db()
-    projects = conn.execute("SELECT * FROM projects ORDER BY sort_order").fetchall()
-    conn.close()
+    projects = load_projects(include_hidden=True)
     return render_template("admin_projects.html", projects=projects)
 
 @app.route("/admin/projects/add", methods=["GET", "POST"])
 @require_admin
 def admin_add_project():
     if request.method == "POST":
-        conn = get_db()
-        conn.execute(
-            "INSERT INTO projects (title, category, thumbnail, vimeo_id, sort_order, visible) VALUES (?,?,?,?,?,?)",
-            (request.form["title"], request.form["category"],
-             request.form["thumbnail"], request.form["vimeo_id"],
-             request.form.get("sort_order", 99), 1)
-        )
-        conn.commit()
-        conn.close()
+        projects = load_projects(include_hidden=True)
+        projects.append({
+            "id": next_project_id(projects),
+            "title": request.form["title"],
+            "category": request.form["category"],
+            "thumbnail": request.form["thumbnail"],
+            "vimeo_id": request.form["vimeo_id"],
+            "sort_order": request.form.get("sort_order", 99),
+            "visible": 1,
+        })
+        write_projects(projects)
         return redirect(url_for("admin_projects"))
     return render_template("admin_project_form.html", project=None)
 
 @app.route("/admin/projects/<int:pid>/edit", methods=["GET", "POST"])
 @require_admin
 def admin_edit_project(pid):
-    conn = get_db()
-    project = conn.execute("SELECT * FROM projects WHERE id=?", (pid,)).fetchone()
-    if request.method == "POST":
-        conn.execute(
-            "UPDATE projects SET title=?, category=?, thumbnail=?, vimeo_id=?, sort_order=?, visible=? WHERE id=?",
-            (request.form["title"], request.form["category"],
-             request.form["thumbnail"], request.form["vimeo_id"],
-             request.form.get("sort_order", 99),
-             1 if request.form.get("visible") else 0, pid)
-        )
-        conn.commit()
-        conn.close()
+    projects = load_projects(include_hidden=True)
+    project = next((project for project in projects if project["id"] == pid), None)
+    if not project:
+        flash("Project not found.")
         return redirect(url_for("admin_projects"))
-    conn.close()
+
+    if request.method == "POST":
+        project.update({
+            "title": request.form["title"],
+            "category": request.form["category"],
+            "thumbnail": request.form["thumbnail"],
+            "vimeo_id": request.form["vimeo_id"],
+            "sort_order": request.form.get("sort_order", 99),
+            "visible": 1 if request.form.get("visible") else 0,
+        })
+        write_projects(projects)
+        return redirect(url_for("admin_projects"))
     return render_template("admin_project_form.html", project=project)
 
 @app.route("/admin/projects/<int:pid>/delete", methods=["POST"])
 @require_admin
 def admin_delete_project(pid):
-    conn = get_db()
-    conn.execute("DELETE FROM projects WHERE id=?", (pid,))
-    conn.commit()
-    conn.close()
+    projects = [
+        project for project in load_projects(include_hidden=True)
+        if project["id"] != pid
+    ]
+    write_projects(projects)
     return redirect(url_for("admin_projects"))
 
 
