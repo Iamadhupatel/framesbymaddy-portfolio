@@ -43,8 +43,20 @@
     <div class="form-row full">
       <div class="form-group">
         <label for="thumbnail">Thumbnail Image URL</label>
-        <input type="url" id="thumbnail" name="thumbnail" value="{{ project.thumbnail if project else '' }}" placeholder="https://your-image.com/thumb.jpg">
-        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Paste a direct image URL. Leave blank to show default icon.</span>
+        <input type="url" id="thumbnail" name="thumbnail" value="{{ project.thumbnail if project else '' }}" placeholder="https://res.cloudinary.com/.../image/upload/.../thumb.jpg">
+        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Cloudinary direct image URLs are preferred. Google Drive share links usually are not direct image URLs and may show the fallback.</span>
+        <div style="display:flex;gap:1rem;align-items:center;margin-top:0.75rem">
+          <img
+            id="thumbnail-preview"
+            src="{{ project.thumbnail if project and project.thumbnail else url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            alt="Thumbnail preview"
+            onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}';"
+            style="width:160px;height:104px;object-fit:cover;border-radius:2px;border:1px solid rgba(201,168,76,0.15);background:var(--mid4)">
+          <div>
+            <div id="thumbnail-status" style="font-size:0.78rem;color:var(--silver);line-height:1.5">Checking thumbnail...</div>
+            <div style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">The saved URL will not be changed by this preview.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -67,4 +79,52 @@
     </div>
   </form>
 </div>
+<script>
+const thumbnailInput = document.getElementById('thumbnail');
+const thumbnailPreview = document.getElementById('thumbnail-preview');
+const thumbnailStatus = document.getElementById('thumbnail-status');
+const thumbnailFallback = "{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}";
+let thumbnailTimer;
+
+function setThumbnailStatus(message, color) {
+  thumbnailStatus.textContent = message;
+  thumbnailStatus.style.color = color;
+}
+
+function validateThumbnailPreview() {
+  const url = thumbnailInput.value.trim();
+
+  if (!url) {
+    thumbnailPreview.src = thumbnailFallback;
+    setThumbnailStatus('No thumbnail URL. The fallback placeholder will be shown.', 'var(--silver)');
+    return;
+  }
+
+  setThumbnailStatus('Checking thumbnail URL...', 'var(--silver)');
+
+  const probe = new Image();
+  probe.onload = function() {
+    if (thumbnailInput.value.trim() !== url) return;
+    thumbnailPreview.src = url;
+    if (url.includes('res.cloudinary.com')) {
+      setThumbnailStatus('Valid Cloudinary image URL.', 'var(--green)');
+    } else {
+      setThumbnailStatus('Image loads successfully. Cloudinary direct image URLs are preferred.', 'var(--gold)');
+    }
+  };
+  probe.onerror = function() {
+    if (thumbnailInput.value.trim() !== url) return;
+    thumbnailPreview.src = thumbnailFallback;
+    setThumbnailStatus('This URL did not load as an image. Use a direct image URL, preferably Cloudinary.', 'var(--red)');
+  };
+  probe.src = url;
+}
+
+thumbnailInput.addEventListener('input', function() {
+  clearTimeout(thumbnailTimer);
+  thumbnailTimer = setTimeout(validateThumbnailPreview, 350);
+});
+
+validateThumbnailPreview();
+</script>
 {% endblock %}

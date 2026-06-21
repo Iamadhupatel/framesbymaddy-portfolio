@@ -1554,11 +1554,12 @@ footer {
       <div class="project-card reveal delay-{{ loop.index }}" data-category="{{ p.category }}"
            {% if p.vimeo_id %}onclick="openProjectVideo('{{ p.vimeo_id }}')" style="cursor:pointer"{% endif %}>
         <div class="project-thumb">
-          {% if p.thumbnail %}
-          <img src="{{ p.thumbnail }}" alt="{{ p.title }}">
-          {% else %}
-          <div class="project-thumb-placeholder">🎬</div>
-          {% endif %}
+          <img
+            src="{{ p.thumbnail or url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            alt="{{ p.title }}"
+            data-fallback-src="{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            onerror="if(this.dataset.fallbackApplied!=='true'){this.dataset.fallbackApplied='true';this.src=this.dataset.fallbackSrc;}"
+          >
           <div class="project-overlay">
             <div class="project-play">
               <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>

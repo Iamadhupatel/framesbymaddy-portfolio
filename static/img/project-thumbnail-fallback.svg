@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="624" viewBox="0 0 960 624" role="img" aria-labelledby="title desc">
+  <title id="title">Project thumbnail placeholder</title>
+  <desc id="desc">A dark placeholder image for portfolio projects without a valid thumbnail.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#242424"/>
+      <stop offset="1" stop-color="#080808"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E2C06A"/>
+      <stop offset="1" stop-color="#C9A84C"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="624" fill="url(#bg)"/>
+  <rect x="1" y="1" width="958" height="622" fill="none" stroke="#C9A84C" stroke-opacity="0.18" stroke-width="2"/>
+  <circle cx="480" cy="282" r="82" fill="#C9A84C" fill-opacity="0.08" stroke="#C9A84C" stroke-opacity="0.28" stroke-width="2"/>
+  <path d="M452 235v94l79-47-79-47z" fill="url(#gold)"/>
+  <text x="480" y="405" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="600" fill="#F0E6D3">FramesByMaddy</text>
+  <text x="480" y="442" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#8A8A8A">Project Thumbnail</text>
+</svg>
