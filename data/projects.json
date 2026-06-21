@@ -55,10 +55,10 @@
   },
   {
     "id": 7,
-    "title": "ECE-BSigningoff",
+    "title": "ECE-BSigningoff-Test-2",
     "category": "reel",
     "thumbnail": "https://drive.google.com/file/d/1rjvEKW-1xz3W_4SFSnyqnZEmwa-f3oXq/view?usp=sharing",
-    "vimeo_id": "https://vimeo.com/1202577824?share=copy&fl=sv&fe=ci",
+    "vimeo_id": "1202577824",
     "sort_order": 99,
     "visible": 1
   }
