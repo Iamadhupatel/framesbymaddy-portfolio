@@ -99,6 +99,18 @@ tr:hover td { background: rgba(201,168,76,0.02); }
 .badge-new-status { background: rgba(201,168,76,0.15); color: var(--gold); }
 .badge-read { background: rgba(91,155,213,0.15); color: var(--blue); }
 .badge-replied { background: rgba(37,211,102,0.15); color: var(--green); }
+.sync-status {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.25rem 0.65rem; border-radius: 99px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.sync-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+.sync-status-synced { background: rgba(37,211,102,0.12); color: var(--green); border: 1px solid rgba(37,211,102,0.25); }
+.sync-status-synced::before { background: var(--green); }
+.sync-status-local_only { background: rgba(138,138,138,0.12); color: var(--silver); border: 1px solid rgba(138,138,138,0.25); }
+.sync-status-local_only::before { background: var(--silver); }
+.sync-status-sync_failed { background: rgba(224,82,82,0.12); color: var(--red); border: 1px solid rgba(224,82,82,0.25); }
+.sync-status-sync_failed::before { background: var(--red); }
 
 /* BUTTONS */
 .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 2px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; font-family: var(--font); }
@@ -203,6 +215,13 @@ textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
   <div class="topbar">
     <h1>{% block page_title %}Dashboard{% endblock %}</h1>
     <div class="topbar-right">
+      {% if github_sync_status is defined %}
+      <span class="sync-status sync-status-{{ github_sync_status }}" title="Projects JSON sync status">
+        {% if github_sync_status == 'synced' %}Synced
+        {% elif github_sync_status == 'sync_failed' %}Sync Failed
+        {% else %}Local Only{% endif %}
+      </span>
+      {% endif %}
       <span style="font-size:0.75rem;color:var(--silver)">👤 Admin</span>
     </div>
   </div>
