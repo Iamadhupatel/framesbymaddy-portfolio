@@ -10,6 +10,12 @@ from urllib.parse import urlparse
 import sqlite3, os, hashlib, datetime, json
 import shutil
 
+from github_sync import (
+    get_sync_status,
+    restore_json_on_startup,
+    sync_json_after_local_write,
+)
+
 app = Flask(
     __name__,
     template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"),
@@ -42,6 +48,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PROJECTS_JSON_PATH = os.path.join(DATA_DIR, "projects.json")
 PROJECTS_BACKUP_PATH = os.path.join(DATA_DIR, "projects.backup.json")
+PROJECTS_GITHUB_PATH = "data/projects.json"
 
 DEFAULT_PROJECTS = [
     {
@@ -147,7 +154,7 @@ def extract_vimeo_id(value):
 
     return ""
 
-def write_projects(projects):
+def _write_projects_local(projects):
     os.makedirs(DATA_DIR, exist_ok=True)
     normalized = [
         normalize_project(project, index + 1)
@@ -157,6 +164,36 @@ def write_projects(projects):
     with open(PROJECTS_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(normalized, f, indent=2, ensure_ascii=False)
         f.write("\n")
+    return normalized
+
+def write_projects(projects):
+    _write_projects_local(projects)
+    sync_json_after_local_write(
+        PROJECTS_GITHUB_PATH,
+        PROJECTS_JSON_PATH,
+        "Sync projects.json from admin panel",
+        app.logger,
+    )
+
+def _validate_projects_json(data):
+    if not isinstance(data, list):
+        raise ValueError("Project data must be a JSON list.")
+
+def _restore_projects_from_github_on_startup():
+    def apply_github_projects(raw_projects):
+        projects = [
+            normalize_project(project, index + 1)
+            for index, project in enumerate(raw_projects)
+            if isinstance(project, dict)
+        ]
+        _write_projects_local(projects)
+
+    restore_json_on_startup(
+        PROJECTS_GITHUB_PATH,
+        apply_github_projects,
+        app.logger,
+        validator=_validate_projects_json,
+    )
 
 def backup_projects_file():
     if os.path.exists(PROJECTS_JSON_PATH):
@@ -354,8 +391,9 @@ def init_db():
 
     conn.commit()
     conn.close()
+    _restore_projects_from_github_on_startup()
     ensure_projects_file()
-    print("✅ Database initialised:", DB_PATH)
+    app.logger.info("Database initialised: %s", DB_PATH)
 
 
 # ─────────────────────────────────────────────
@@ -375,6 +413,12 @@ def require_admin(f):
             return redirect(url_for("admin_login"))
         return f(*args, **kwargs)
     return decorated
+
+@app.context_processor
+def inject_admin_context():
+    if request.path.startswith("/admin"):
+        return {"github_sync_status": get_sync_status()}
+    return {}
 
 
 # ─────────────────────────────────────────────
