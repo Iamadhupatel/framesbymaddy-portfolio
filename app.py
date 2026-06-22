@@ -771,5 +771,4 @@ if __name__ == "__main__":
     init_db()
     print("🎬 FramesByMaddy running at http://localhost:5000")
     print("🔐 Admin panel at http://localhost:5000/admin")
-    print("   Username: admin | Password: maddy2026")
     app.run(debug=True, port=5000)

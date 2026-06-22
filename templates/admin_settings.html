@@ -1,4 +1,4 @@
-grep -n "showreel" templates/admin_settings.html{% extends "admin_base.html" %}
+{% extends "admin_base.html" %}
 {% block title %}Settings{% endblock %}
 {% block page_title %}Site Settings{% endblock %}
 
@@ -21,23 +21,25 @@ grep -n "showreel" templates/admin_settings.html{% extends "admin_base.html" %}
         </div>
       </div>
       <div class="form-group">
-    <label for="showreel_thumbnail">Showreel Thumbnail URL</label>
-    <input
-        type="text"
-        id="showreel_thumbnail"
-        name="showreel_thumbnail"
-        value="{{ settings.showreel_thumbnail }}"
-        placeholder="https://res.cloudinary.com/..."
-    >
-</div>
+        <label for="showreel_thumbnail">Showreel Thumbnail URL</label>
+        <input
+          type="text"
+          id="showreel_thumbnail"
+          name="showreel_thumbnail"
+          value="{{ settings.showreel_thumbnail }}"
+          placeholder="https://res.cloudinary.com/..."
+        >
+      </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="ba_before_vimeo_id">Before/After — BEFORE Video ID</label>
-          <input type="text" id="ba_before_vimeo_id" name="ba_before_vimeo_id" value="{{ settings.ba_before_vimeo_id }}" placeholder="1199859780">
+          <label for="ba_before_vimeo_id">Before/After — BEFORE Image URL</label>
+          <input type="url" id="ba_before_vimeo_id" name="ba_before_vimeo_id" value="{{ settings.ba_before_vimeo_id }}" placeholder="https://res.cloudinary.com/...">
+          <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Cloudinary direct image URL for the “before” side of the comparison slider</span>
         </div>
         <div class="form-group">
-          <label for="ba_after_vimeo_id">Before/After — AFTER Video ID</label>
-          <input type="text" id="ba_after_vimeo_id" name="ba_after_vimeo_id" value="{{ settings.ba_after_vimeo_id }}" placeholder="1199859781">
+          <label for="ba_after_vimeo_id">Before/After — AFTER Image URL</label>
+          <input type="url" id="ba_after_vimeo_id" name="ba_after_vimeo_id" value="{{ settings.ba_after_vimeo_id }}" placeholder="https://res.cloudinary.com/...">
+          <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Cloudinary direct image URL for the “after” side of the comparison slider</span>
         </div>
       </div>
     </div>

@@ -33,8 +33,6 @@ input::placeholder { color:var(--silver); opacity:0.5; }
 .btn-login { width:100%; background:var(--gold); color:var(--mid); font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:600; padding:0.85rem; border:none; border-radius:2px; cursor:pointer; transition:background 0.2s; letter-spacing:0.05em; margin-top:0.5rem; }
 .btn-login:hover { background:var(--gold-l); }
 .error { background:rgba(224,82,82,0.1); border:1px solid rgba(224,82,82,0.25); color:#F08080; padding:0.7rem 1rem; border-radius:2px; font-size:0.82rem; margin-bottom:1rem; }
-.hint { text-align:center; margin-top:1.5rem; font-size:0.75rem; color:var(--silver); }
-.hint span { color:var(--gold); }
 </style>
 </head>
 <body>
@@ -52,7 +50,7 @@ input::placeholder { color:var(--silver); opacity:0.5; }
   <form method="POST">
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="admin" required autofocus>
+      <input type="text" id="username" name="username" placeholder="Enter username" required autofocus>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
