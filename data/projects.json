@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "ECE-BSigningoff",
-    "category": "reel",
-    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781898276/thumb_1_rqzww4.jpg",
-    "vimeo_id": "1199859781",
-    "sort_order": 10,
-    "visible": 1
-  },
-  {
     "id": 2,
     "title": "Not just a circle, it’s our forever loop ♾️❤️",
     "category": "cinematic",
@@ -78,6 +69,24 @@
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1783770513/ADaywithBestie-Cover_z2gujx.jpg",
     "vimeo_id": "1209039821",
     "sort_order": 9,
+    "visible": 1
+  },
+  {
+    "id": 1,
+    "title": "ECE-BSigningoff",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781898276/thumb_1_rqzww4.jpg",
+    "vimeo_id": "1199859781",
+    "sort_order": 10,
+    "visible": 1
+  },
+  {
+    "id": 10,
+    "title": "Lights. Music. Energy. Every frame tells the story 🎥✨",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835600/thumb_1_bq8mty.jpg",
+    "vimeo_id": "1212438871",
+    "sort_order": 1,
     "visible": 1
   }
 ]
