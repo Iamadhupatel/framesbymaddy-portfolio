@@ -1,28 +1,28 @@
 [
   {
-    "id": 1,
-    "title": "Instagram Reel — Brand Showcase",
+    "id": 10,
+    "title": "Lights. Music. Energy. Every frame tells the story 🎥✨",
     "category": "reel",
-    "thumbnail": "",
-    "vimeo_id": "1199859781",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835600/thumb_1_bq8mty.jpg",
+    "vimeo_id": "1212438871",
     "sort_order": 1,
     "visible": 1
   },
   {
-    "id": 2,
-    "title": "Cinematic Short Film",
-    "category": "cinematic",
-    "thumbnail": "",
-    "vimeo_id": "1199859781",
+    "id": 11,
+    "title": "Turning nightlife into cinematic stories 🎥",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835759/thumb_2_vscwae.jpg",
+    "vimeo_id": "1212438873",
     "sort_order": 2,
     "visible": 1
   },
   {
     "id": 3,
-    "title": "Product Commercial — Launch",
+    "title": "Farewell Batch..2022-26❤️",
     "category": "commercial",
-    "thumbnail": "",
-    "vimeo_id": "",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781906355/farewellthumb_wqkmg8.jpg",
+    "vimeo_id": "1202943521",
     "sort_order": 3,
     "visible": 1
   },
@@ -30,36 +30,81 @@
     "id": 4,
     "title": "Wedding Highlights Film",
     "category": "event",
-    "thumbnail": "",
-    "vimeo_id": "",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1782073385/R_R_%EF%B8%8F_sqbyzj.jpg",
+    "vimeo_id": "1199859780",
     "sort_order": 4,
     "visible": 1
   },
   {
     "id": 5,
-    "title": "Creator Content Package",
+    "title": "ANKAPUR...🥂",
     "category": "lifestyle",
-    "thumbnail": "",
-    "vimeo_id": "",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1782073720/ANKAPUR_h9laka.jpg",
+    "vimeo_id": "1203268067",
     "sort_order": 5,
     "visible": 1
   },
   {
     "id": 6,
-    "title": "YouTube Shorts Series",
+    "title": "Thanuvu Mosina Praanamaa...❤️",
     "category": "reel",
-    "thumbnail": "",
-    "vimeo_id": "",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1782075004/Thanuvu_mosina_kxw1qg.jpg",
+    "vimeo_id": "1203271707",
     "sort_order": 6,
     "visible": 1
   },
   {
     "id": 7,
-    "title": "ECE-BSigningoff-Test-2",
+    "title": "2022- Signing off",
     "category": "reel",
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781897222/thumb_e7uk2d.jpg",
     "vimeo_id": "1202577824",
     "sort_order": 7,
+    "visible": 1
+  },
+  {
+    "id": 8,
+    "title": "7 idiots, 4 years, infinite stories❤️🫶🏻",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1782072666/walkie_Talkiesphoto_vrqzda.jpg",
+    "vimeo_id": "1203266176",
+    "sort_order": 8,
+    "visible": 1
+  },
+  {
+    "id": 9,
+    "title": "Girl Therapy 💕",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1783770513/ADaywithBestie-Cover_z2gujx.jpg",
+    "vimeo_id": "1209039821",
+    "sort_order": 9,
+    "visible": 1
+  },
+  {
+    "id": 1,
+    "title": "ECE-BSigningoff",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781898276/thumb_1_rqzww4.jpg",
+    "vimeo_id": "1199859781",
+    "sort_order": 10,
+    "visible": 1
+  },
+  {
+    "id": 2,
+    "title": "Not just a circle, it’s our forever loop ♾️❤️",
+    "category": "cinematic",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781905179/0413-Cover_jjksg5.jpg",
+    "vimeo_id": "1202941728",
+    "sort_order": 11,
+    "visible": 1
+  },
+  {
+    "id": 12,
+    "title": "నువ్వెతికే బంగారు లోకం అదిగో పదరా🚶🏻‍➡️.....!",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784836151/thumb_3_x2auk6.jpg",
+    "vimeo_id": "1212441606",
+    "sort_order": 12,
     "visible": 1
   }
 ]

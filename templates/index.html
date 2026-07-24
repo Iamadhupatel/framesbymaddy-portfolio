@@ -27,15 +27,15 @@
   --white:       #FFFFFF;
   --font-display: 'Poppins', sans-serif;
   --font-body:    'Inter', sans-serif;
-  --ease-cinema:  cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-reveal:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinema:  cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-reveal:  cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* =============================================
    RESET & BASE
 ============================================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; overflow-x: clip; }
 body {
   background: var(--midnight);
   color: var(--beige);
@@ -108,31 +108,35 @@ body::before {
 ============================================= */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.9s var(--ease-reveal), transform 0.9s var(--ease-reveal);
+  filter: blur(4px);
+  transform: translateY(32px);
+  transition: opacity 0.72s var(--ease-reveal), transform 0.72s var(--ease-reveal), filter 0.72s var(--ease-reveal);
 }
 .reveal.visible {
   opacity: 1;
+  filter: blur(0);
   transform: translateY(0);
 }
 .reveal-left {
   opacity: 0;
+  filter: blur(4px);
   transform: translateX(-40px);
-  transition: opacity 0.9s var(--ease-reveal), transform 0.9s var(--ease-reveal);
+  transition: opacity 0.72s var(--ease-reveal), transform 0.72s var(--ease-reveal), filter 0.72s var(--ease-reveal);
 }
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-left.visible { opacity: 1; filter: blur(0); transform: translateX(0); }
 .reveal-right {
   opacity: 0;
+  filter: blur(4px);
   transform: translateX(40px);
-  transition: opacity 0.9s var(--ease-reveal), transform 0.9s var(--ease-reveal);
+  transition: opacity 0.72s var(--ease-reveal), transform 0.72s var(--ease-reveal), filter 0.72s var(--ease-reveal);
 }
-.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-right.visible { opacity: 1; filter: blur(0); transform: translateX(0); }
 
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
-.delay-4 { transition-delay: 0.4s; }
-.delay-5 { transition-delay: 0.5s; }
+.delay-1 { transition-delay: 0.08s; }
+.delay-2 { transition-delay: 0.16s; }
+.delay-3 { transition-delay: 0.24s; }
+.delay-4 { transition-delay: 0.32s; }
+.delay-5 { transition-delay: 0.40s; }
 
 /* =============================================
    BUTTONS
@@ -197,6 +201,20 @@ body::before {
   -webkit-backdrop-filter: blur(20px);
   padding: 0.9rem 0;
   border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold-light), var(--gold));
+  box-shadow: 0 1px 12px rgba(201,168,76,0.38);
+  pointer-events: none;
+  will-change: transform;
 }
 .nav-inner {
   display: flex;
@@ -300,45 +318,45 @@ body.menu-open {
 ============================================= */
 #hero {
   position: relative;
-  height: 100vh;
-  min-height: 700px;
-  display: flex;
+  min-height: 100vh;
+  min-height: 720px;
+  display: grid;
   align-items: center;
   overflow: hidden;
+  isolation: isolate;
 }
-.hero-video-bg {
+.hero-backdrop {
   position: absolute;
   inset: 0;
   z-index: 0;
-}
-.hero-video-bg video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.35;
-}
-.hero-video-fallback {
-  position: absolute;
-  inset: 0;
   background: 
-    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
-    linear-gradient(135deg, #0A0A0A 0%, #141010 50%, #0A0A0A 100%);
+    radial-gradient(circle at 74% 42%, rgba(200,169,106,0.18) 0%, rgba(200,169,106,0.08) 28%, transparent 56%),
+    radial-gradient(circle at 18% 20%, rgba(200,169,106,0.08) 0%, transparent 34%),
+    linear-gradient(120deg, #080808 0%, #11100d 48%, #070707 100%);
 }
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(8,8,8,0.92) 0%,
-    rgba(8,8,8,0.6) 50%,
-    rgba(8,8,8,0.2) 100%
-  );
+  background:
+    linear-gradient(to right, rgba(8,8,8,0.94) 0%, rgba(8,8,8,0.66) 48%, rgba(8,8,8,0.12) 100%),
+    linear-gradient(to top, rgba(8,8,8,0.82) 0%, transparent 34%);
   z-index: 1;
+}
+.hero-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.9fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
 }
 .hero-content {
   position: relative;
-  z-index: 2;
-  max-width: 750px;
+  z-index: 4;
+  max-width: 680px;
 }
 .hero-eyebrow {
   display: flex;
@@ -352,9 +370,10 @@ body.menu-open {
   background: var(--gold);
 }
 .hero-title {
-  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-size: clamp(4rem, 8vw, 7.4rem);
   color: var(--beige);
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
+  text-shadow: 0 18px 44px rgba(0,0,0,0.55);
 }
 .hero-title .accent { color: var(--gold); display: block; }
 .hero-roles {
@@ -387,6 +406,60 @@ body.menu-open {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+}
+.hero-portrait-stage {
+  position: relative;
+  z-index: 3;
+  min-height: 620px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+.hero-portrait-stage::before {
+  content: '';
+  position: absolute;
+  width: min(92%, 540px);
+  aspect-ratio: 1;
+  right: 5%;
+  bottom: 9%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,106,0.18) 0%, rgba(200,169,106,0.1) 34%, transparent 68%);
+  filter: blur(8px);
+}
+.hero-portrait-stage::after {
+  content: '';
+  position: absolute;
+  width: min(72%, 420px);
+  height: 78%;
+  right: 10%;
+  bottom: 2%;
+  border-radius: 46% 46% 6% 6%;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,169,106,0.16) 52%, transparent 100%);
+  filter: blur(28px);
+  opacity: 0.95;
+}
+.hero-portrait {
+  position: relative;
+  z-index: 2;
+  width: min(104%, 620px);
+  max-height: 82vh;
+  object-fit: contain;
+  object-position: bottom center;
+  transform: translate3d(-8%, 0, 0);
+  filter: drop-shadow(0 34px 60px rgba(0,0,0,0.62)) drop-shadow(18px 0 42px rgba(200,169,106,0.15));
+  opacity: 0;
+  animation: portraitReveal 0.72s var(--ease-reveal) 0.16s forwards, portraitFloat 9s ease-in-out 1s infinite alternate;
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, rgba(0,0,0,0.94) 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 68%, rgba(0,0,0,0.94) 82%, transparent 100%);
+}
+@keyframes portraitReveal {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.985); }
+  to { opacity: 1; transform: translate3d(-8%, 0, 0) scale(1); }
+}
+@keyframes portraitFloat {
+  0%, 100% { transform: translate3d(-8%, 0, 0); }
+  50% { transform: translate3d(-8%, -4px, 0); }
 }
 .hero-scroll {
   position: absolute;
@@ -476,59 +549,62 @@ body.menu-open {
 .video-frame {
   position: relative;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1040px;
   margin: 0 auto;
-  border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 4px;
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 8px;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(200,169,106,0.12), transparent 45%),
+    var(--midnight-3);
+  box-shadow: 0 28px 80px rgba(0,0,0,0.38);
 }
 .video-frame::before {
   content: '';
   display: block;
   padding-top: 56.25%;
 }
-.video-frame iframe, .video-placeholder {
+.video-frame iframe,
+.showreel-loading {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   border: none;
 }
-.video-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--midnight-3);
-  gap: 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.video-placeholder:hover { background: var(--midnight-4); }
-.play-btn {
-  width: 70px;
-  height: 70px;
-  border: 2px solid var(--gold);
-  border-radius: 50%;
+.showreel-loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  background:
+    linear-gradient(135deg, rgba(8,8,8,0.44), rgba(8,8,8,0.76)),
+    var(--midnight-3);
+  opacity: 1;
+  transition: opacity 0.45s var(--ease-cinema);
 }
-.play-btn svg {
-  width: 28px;
-  height: 28px;
-  fill: var(--gold);
-  margin-left: 4px;
+.showreel-loading.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
-.video-placeholder:hover .play-btn {
-  background: var(--gold);
+.showreel-loading img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.58;
 }
-.video-placeholder:hover .play-btn svg { fill: var(--midnight); }
-.video-placeholder p {
+.showreel-loading::after {
+  content: 'Loading Showreel';
+  position: relative;
+  z-index: 1;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(201,168,76,0.28);
+  border-radius: 999px;
+  background: rgba(8,8,8,0.68);
   color: var(--silver);
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
@@ -609,7 +685,7 @@ body.menu-open {
   font-size: 2.5rem;
 }
 .project-card:hover .project-thumb img,
-.project-card:hover .project-thumb-placeholder { transform: scale(1.06); }
+.project-card:hover .project-thumb-placeholder { transform: scale(1.05); }
 .project-overlay {
   position: absolute;
   inset: 0;
@@ -729,104 +805,59 @@ body.menu-open {
 #before-after {
   background: var(--midnight);
 }
-.ba-container {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  border-radius: 4px;
-  overflow: hidden;
-  user-select: none;
-  border: 1px solid rgba(201,168,76,0.12);
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: stretch;
 }
-.ba-container::before { content: ''; display: block; padding-top: 56.25%; }
-.ba-before, .ba-after {
+.comparison-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.16);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(26,26,26,0.95), rgba(17,17,17,0.98));
+  box-shadow: 0 24px 70px rgba(0,0,0,0.28);
+}
+.comparison-card::before {
+  content: '';
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle at 20% 0%, rgba(200,169,106,0.12), transparent 42%);
 }
-.ba-before {
+.comparison-copy {
+  position: relative;
+  z-index: 1;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.comparison-kicker {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.comparison-copy h3 {
+  font-family: var(--font-display);
+  color: var(--beige);
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  line-height: 1.1;
+}
+.comparison-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
   background: var(--midnight-4);
 }
-.ba-after {
-  background: var(--midnight-3);
-}
-.ba-img {
+.comparison-video iframe {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-.ba-clip {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  width: 50%;
-}
-.ba-clip .ba-after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-}
-.ba-divider {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 2px;
-  background: var(--gold);
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: ew-resize;
-  z-index: 10;
-}
-.ba-handle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  background: var(--gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.ba-handle svg { width: 20px; height: 20px; fill: var(--midnight); }
-.ba-label-before, .ba-label-after {
-  position: absolute;
-  top: 1.5rem;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border-radius: 2px;
-  z-index: 5;
-}
-.ba-label-before {
-  left: 1.5rem;
-  background: rgba(138,138,138,0.2);
-  border: 1px solid rgba(138,138,138,0.3);
-  color: var(--silver-light);
-}
-.ba-label-after {
-  right: 1.5rem;
-  background: rgba(201,168,76,0.15);
-  border: 1px solid rgba(201,168,76,0.3);
-  color: var(--gold);
-}
-.ba-hint {
-  text-align: center;
-  margin-top: 1.5rem;
-  font-size: 0.8rem;
-  color: var(--silver);
-  letter-spacing: 0.08em;
+  border: 0;
 }
 
 /* =============================================
@@ -1374,9 +1405,238 @@ footer {
 }
 
 /* =============================================
+   INTERACTION POLISH
+============================================= */
+html { scroll-padding-top: 5.5rem; }
+section[id] { scroll-margin-top: 5.5rem; }
+
+.reveal,
+.reveal-left,
+.reveal-right {
+  will-change: opacity, transform;
+  transition-duration: 0.72s;
+}
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible { will-change: auto; }
+
+.btn,
+.nav-cta,
+.filter-tab,
+.social-icon,
+.footer-social a,
+.slider-btn,
+.contact-method,
+.project-card,
+.masonry-item,
+.comparison-card,
+.testimonial-card,
+.contact-form {
+  transition-timing-function: var(--ease-reveal);
+}
+.btn,
+.nav-cta,
+.filter-tab,
+.social-icon,
+.footer-social a,
+.slider-btn { transition-property: transform, color, background-color, border-color, box-shadow; }
+
+.btn:focus-visible,
+.nav-cta:focus-visible,
+.nav-menu a:focus-visible,
+.filter-tab:focus-visible,
+.social-icon:focus-visible,
+.footer-social a:focus-visible,
+.slider-btn:focus-visible,
+.contact-method:focus-visible,
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.nav-hamburger:focus-visible,
+.mobile-close:focus-visible,
+#float-wa:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 4px;
+}
+
+.nav-menu a { position: relative; padding: 0.4rem 0; }
+.nav-menu a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease-reveal);
+}
+.nav-menu a:hover::after,
+.nav-menu a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+
+.hero-portrait {
+  translate: 0 0;
+  transition: translate 0.65s var(--ease-reveal);
+  will-change: transform, translate;
+}
+
+/* =============================================
+   FINAL AGENCY REFINEMENT
+============================================= */
+:root {
+  --shadow-luxury: 0 20px 54px rgba(0,0,0,0.24), 0 0 30px rgba(201,168,76,0.035);
+  --shadow-luxury-hover: 0 28px 68px rgba(0,0,0,0.3), 0 0 34px rgba(201,168,76,0.07);
+}
+
+.section-header { margin-bottom: clamp(3rem, 5vw, 4.5rem); }
+.section-header h2,
+.showreel-header h2,
+.about-content h2,
+.contact-info h2 {
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+  text-shadow: 0 8px 32px rgba(201,168,76,0.055);
+}
+.section-header > .t-label,
+.showreel-header > .t-label { margin-bottom: 0.85rem; }
+.hero-desc,
+.showreel-header p,
+.about-content p,
+.contact-info p { line-height: 1.78; }
+
+#showreel,
+#before-after,
+#testimonials,
+footer {
+  background-image: radial-gradient(ellipse 56% 35% at 50% 0%, rgba(201,168,76,0.035), transparent 72%);
+}
+.video-frame {
+  border-color: rgba(201,168,76,0.26);
+  box-shadow: var(--shadow-luxury);
+}
+.video-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255,255,255,0.025);
+  border-radius: inherit;
+}
+#stats { background-image: linear-gradient(90deg, transparent, rgba(201,168,76,0.025), transparent); }
+.stat-number {
+  text-shadow: 0 0 22px rgba(201,168,76,0.17);
+  margin-bottom: 0.5rem;
+}
+.stat-label { letter-spacing: 0.14em; }
+
+#nav.scrolled {
+  background: rgba(8,8,8,0.78);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.18), 0 1px 0 rgba(201,168,76,0.06);
+}
+.nav-menu a.active { color: var(--gold); text-shadow: 0 0 16px rgba(201,168,76,0.22); }
+.nav-menu a.active::after { transform: scaleX(1); transform-origin: left; }
+
+.project-card,
+.masonry-item,
+.comparison-card,
+.testimonial-card,
+.contact-form { box-shadow: var(--shadow-luxury); }
+.testimonial-card { background: linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)); }
+.testi-avatar { box-shadow: 0 0 0 4px rgba(201,168,76,0.045), 0 8px 20px rgba(0,0,0,0.18); }
+.testi-quote { text-shadow: 0 6px 20px rgba(201,168,76,0.2); }
+.project-title { transition: color 0.45s var(--ease-reveal); }
+.project-card:hover .project-title { color: var(--gold-light); }
+.masonry-item { box-shadow: 0 14px 32px rgba(0,0,0,0.2); }
+
+.btn,
+.nav-cta,
+.filter-tab,
+.social-icon,
+.footer-social a,
+.slider-btn,
+.contact-method,
+.project-card,
+.masonry-item,
+.comparison-card,
+.testimonial-card,
+.contact-form,
+.project-thumb img,
+.masonry-item img { transition-duration: 0.45s; }
+
+footer { border-top-color: rgba(201,168,76,0.13); }
+.footer-main { margin-bottom: 3.5rem; }
+.footer-bottom { border-top-color: rgba(201,168,76,0.13); }
+.footer-social a { background: rgba(255,255,255,0.015); }
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover,
+  .masonry-item:hover,
+  .comparison-card:hover,
+  .testimonial-card:hover,
+  .contact-form:hover { box-shadow: var(--shadow-luxury-hover); }
+  .video-frame:hover { box-shadow: 0 28px 74px rgba(0,0,0,0.3), 0 0 38px rgba(201,168,76,0.07); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    box-shadow: 0 12px 28px rgba(201,168,76,0.22);
+    transform: translateY(-3px);
+  }
+  .btn-outline:hover {
+    background: rgba(201,168,76,0.07);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+  }
+  .nav-cta:hover { box-shadow: 0 8px 20px rgba(201,168,76,0.18); transform: translateY(-1px); }
+  .project-card:hover,
+  .masonry-item:hover,
+  .comparison-card:hover,
+  .testimonial-card:hover,
+  .contact-form:hover {
+    border-color: rgba(201,168,76,0.28);
+    box-shadow: 0 22px 48px rgba(0,0,0,0.28), 0 0 0 1px rgba(201,168,76,0.04);
+    transform: translateY(-4px) scale(1.02);
+  }
+  .project-card:hover .project-thumb img,
+  .project-card:hover .project-thumb-placeholder { transform: scale(1.05); }
+  .masonry-item:hover img,
+  .masonry-item:hover .masonry-img-placeholder { transform: scale(1.05); }
+  .comparison-card:hover { box-shadow: 0 28px 70px rgba(0,0,0,0.34), 0 0 28px rgba(201,168,76,0.06); }
+  .social-icon:hover,
+  .footer-social a:hover,
+  .slider-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.2); }
+  .contact-method:hover { transform: translateX(3px); }
+  .btn:active, .nav-cta:active { transform: translateY(-1px) scale(0.985); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =============================================
    RESPONSIVE
 ============================================= */
 @media (max-width: 1024px) {
+  #hero { min-height: 760px; }
+  .hero-layout {
+    grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.85fr);
+    gap: 1.5rem;
+  }
+  .hero-portrait-stage { min-height: 560px; }
+  .hero-portrait {
+    width: min(112%, 520px);
+    transform: translate3d(-2%, 0, 0);
+  }
   .projects-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-main { grid-template-columns: 1fr 1fr; }
   .about-grid { gap: 3.5rem; }
@@ -1384,9 +1644,39 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .reveal-left, .reveal-right { transform: translateY(28px); }
+  .reveal-left.visible, .reveal-right.visible { transform: translateY(0); }
   .nav-menu, .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
-  .hero-title { font-size: 3rem; }
+  #hero { min-height: auto; }
+  .hero-layout {
+    grid-template-columns: 1fr;
+    padding-top: 7rem;
+    padding-bottom: 5.5rem;
+  }
+  .hero-content { max-width: 560px; }
+  .hero-title { font-size: clamp(3.1rem, 14vw, 4.8rem); }
+  .hero-roles { gap: 0.45rem 1rem; }
+  .hero-role:not(:last-child)::after { margin-left: 1rem; }
+  .hero-portrait-stage {
+    min-height: 420px;
+    margin-top: -2.5rem;
+    opacity: 0.9;
+  }
+  .hero-portrait {
+    width: min(90vw, 430px);
+    max-height: 480px;
+    transform: translate3d(0, 0, 0);
+  }
+  @keyframes portraitReveal {
+    from { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.985); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  }
+  @keyframes portraitFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -2px, 0); }
+  }
+  .comparison-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-item { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.1); }
   .stat-item:nth-child(2n) { border-right: none; }
@@ -1410,9 +1700,11 @@ footer {
   .container { padding: 0 1.25rem; }
   .masonry-grid { columns: 1; }
   .hero-buttons { flex-direction: column; align-items: flex-start; }
+  .hero-roles { flex-direction: column; }
+  .hero-role:not(:last-child)::after { display: none; }
+  .hero-portrait-stage { min-height: 340px; margin-top: -1.5rem; }
+  .hero-scroll { bottom: 1.25rem; }
   .contact-form { padding: 1.5rem; }
-  .ba-label-before { left: 0.75rem; top: 0.75rem; }
-  .ba-label-after { right: 0.75rem; top: 0.75rem; }
 }
 
 /* =============================================
@@ -1454,16 +1746,37 @@ footer {
 }
 .project-modal-close:hover { color: var(--gold); border-color: rgba(201, 168, 76, 0.35); }
 .project-modal-inner {
-  width: min(450px, calc(100vw - 2rem));
-  max-height: none;
+  width: min(95vw, 1000px);
   margin: auto;
-  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+/* Base */
 .project-modal-video {
   position: relative;
   width: 100%;
-  padding-top: 177.78%;
 }
+
+/* Portrait (Instagram Reels) */
+.project-modal-video.portrait {
+  max-width: 420px;
+  aspect-ratio: 9 / 16;
+}
+
+/* Landscape (Wedding / Cinematic / YouTube) */
+.project-modal-video.landscape {
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+}
+
+/* Square */
+.project-modal-video.square {
+  max-width: 600px;
+  aspect-ratio: 1 / 1;
+}
+
 .project-modal-video iframe {
   position: absolute;
   inset: 0;
@@ -1473,6 +1786,21 @@ footer {
   border-radius: 4px;
   background: #000;
 }
+
+@media (max-width: 768px) {
+  .project-modal-video.landscape {
+    max-width: 100%;
+  }
+
+  .project-modal-video.portrait {
+    max-width: min(90vw, 420px);
+  }
+
+  .project-modal-video.square {
+    max-width: min(90vw, 500px);
+  }
+}
+
 @media (min-width: 769px) {
   .project-modal-video iframe {
     border: 1px solid rgba(201, 168, 76, 0.2);
@@ -1481,6 +1809,7 @@ footer {
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
 <!-- NAVIGATION -->
 <nav id="nav">
@@ -1519,44 +1848,45 @@ footer {
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-video-bg">
-    <iframe
-      src="https://player.vimeo.com/video/{{ settings.hero_vimeo_id }}?autoplay=1&muted=1&loop=1&background=1&quality=1080p"
-      frameborder="0"
-      allow="autoplay; fullscreen"
-      style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none"
-      title="Hero background"
-    ></iframe>
-    <div class="hero-video-fallback"></div>
-  </div>
+  <div class="hero-backdrop"></div>
   <div class="hero-overlay"></div>
   <div class="container">
-    <div class="hero-content">
-      <div class="hero-eyebrow reveal">
-        <span class="hero-eyebrow-line"></span>
-        <span class="t-label">Available for Projects</span>
+    <div class="hero-layout">
+      <div class="hero-content">
+        <div class="hero-eyebrow reveal">
+          <span class="hero-eyebrow-line"></span>
+          <span class="t-label">Available for Projects</span>
+        </div>
+        <h1 class="t-display hero-title reveal delay-1">
+          Frames
+          <span class="accent">By Maddy</span>
+        </h1>
+        <div class="hero-roles reveal delay-2">
+          <span class="hero-role">Video Editor</span>
+          <span class="hero-role">Photographer</span>
+          <span class="hero-role">Visual Storyteller</span>
+        </div>
+        <p class="hero-desc reveal delay-3">
+          Creating cinematic visuals, engaging reels, and timeless photographs that help brands and individuals stand out.
+        </p>
+        <div class="hero-buttons reveal delay-4">
+          <a href="#work" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            View My Work
+          </a>
+          <a href="https://wa.me/{{ settings.whatsapp_number }}" target="_blank" class="btn btn-outline">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
       </div>
-      <h1 class="t-display hero-title reveal delay-1">
-        Frames
-        <span class="accent">By Maddy</span>
-      </h1>
-      <div class="hero-roles reveal delay-2">
-        <span class="hero-role">Video Editor</span>
-        <span class="hero-role">Photographer</span>
-        <span class="hero-role">Visual Storyteller</span>
-      </div>
-      <p class="hero-desc reveal delay-3">
-        Creating cinematic visuals, engaging reels, and timeless photographs that help brands and individuals stand out.
-      </p>
-      <div class="hero-buttons reveal delay-4">
-        <a href="#work" class="btn btn-primary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          View My Work
-        </a>
-        <a href="https://wa.me/{{ settings.whatsapp_number }}" target="_blank" class="btn btn-outline">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-          Chat on WhatsApp
-        </a>
+      <div class="hero-portrait-stage" aria-hidden="true">
+        <img
+          class="hero-portrait"
+          src="{{ url_for('static', filename='images/hero/hero-portrait.png') }}"
+          alt=""
+          decoding="async"
+          fetchpriority="high">
       </div>
     </div>
   </div>
@@ -1599,21 +1929,23 @@ footer {
       <h2 class="t-heading">Featured Showreel</h2>
       <p>A collection of my best cinematic edits and storytelling work</p>
     </div>
-    <div class="video-frame reveal delay-2">
-  <div class="video-placeholder" id="showreel-placeholder" onclick="loadShowreel()">
-    <img
-      src="{{ settings.showreel_thumbnail }}"
-      alt="Showreel Thumbnail"
-      style="width:100%;height:100%;object-fit:cover;border-radius:4px"
-    >
-    <div class="play-btn">
-      <svg viewBox="0 0 24 24">
-        <polygon points="5 3 19 12 5 21 5 3"/>
-      </svg>
+    <div class="video-frame reveal delay-2" id="showreel-frame">
+      <div class="showreel-loading" id="showreel-loading">
+        {% if settings.showreel_thumbnail %}
+        <img
+          src="{{ settings.showreel_thumbnail }}"
+          alt=""
+          onerror="this.remove()">
+        {% endif %}
+      </div>
+      <iframe
+        id="showreel-iframe"
+        title="Featured Showreel"
+        data-vimeo-id="{{ settings.showreel_vimeo_id }}"
+        loading="lazy"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen></iframe>
     </div>
-
-  </div>
-</div>
   </div>
 </section>
 
@@ -1635,13 +1967,18 @@ footer {
     </div>
     <div class="projects-grid" id="projects-grid" style="margin-top:2.5rem">
       {% for p in projects %}
-      <div class="project-card reveal delay-{{ loop.index }}" data-category="{{ p.category }}"
-           {% if p.vimeo_id %}onclick="openProjectVideo('{{ p.vimeo_id }}')" style="cursor:pointer"{% endif %}>
-        <div class="project-thumb">
+      <div class="project-card reveal delay-{{ loop.index }}" 
+           data-category="{{ p.category }}"
+           {% if p.vimeo_id %}
+           onclick="openProjectVideo('{{ p.vimeo_id }}', '{{ p.orientation|default('portrait') }}')"
+           style="cursor:pointer"
+           {% endif %}>
+
+       <div class="project-thumb">
           <img
-            src="{{ p.thumbnail or url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            src="{{ p.thumbnail or url_for('static', filename='images/thumbnails/project-thumbnail-fallback.svg') }}"
             alt="{{ p.title }}"
-            data-fallback-src="{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            data-fallback-src="{{ url_for('static', filename='images/thumbnails/project-thumbnail-fallback.svg') }}"
             onerror="if(this.dataset.fallbackApplied!=='true'){this.dataset.fallbackApplied='true';this.src=this.dataset.fallbackSrc;}"
           >
           <div class="project-overlay">
@@ -1708,30 +2045,42 @@ footer {
       <span class="t-label">Transformation</span>
       <span class="gold-line gold-line-center"></span>
       <h2 class="t-heading">Editing Transformation</h2>
-      <p class="t-silver" style="margin-top:0.75rem;font-size:0.95rem">Drag the slider to see the difference</p>
+      <p class="t-silver" style="margin-top:0.75rem;font-size:0.95rem">Compare the raw moment with the finished cinematic edit</p>
     </div>
-    <div class="ba-container reveal delay-2" id="ba-container">
-      <div class="ba-before">
-        {% if settings.ba_before_vimeo_id and settings.ba_before_vimeo_id.startswith('http') %}
-        <img class="ba-img" src="{{ settings.ba_before_vimeo_id }}" alt="Before edit">
-        {% endif %}
-      </div>
-      <div class="ba-clip" id="ba-clip">
-        <div class="ba-after">
-          {% if settings.ba_after_vimeo_id and settings.ba_after_vimeo_id.startswith('http') %}
-          <img class="ba-img" src="{{ settings.ba_after_vimeo_id }}" alt="After edit">
+    <div class="comparison-grid reveal delay-2">
+      <article class="comparison-card">
+        <div class="comparison-copy">
+          <span class="comparison-kicker">Before</span>
+          <h3>Raw Footage</h3>
+        </div>
+        <div class="comparison-video">
+          {% if settings.ba_before_vimeo_id %}
+          <iframe
+            src="https://player.vimeo.com/video/{{ settings.ba_before_vimeo_id }}?title=0&byline=0&portrait=0&controls=1"
+            title="Raw footage"
+            loading="lazy"
+            allow="fullscreen; picture-in-picture"
+            allowfullscreen></iframe>
           {% endif %}
         </div>
-      </div>
-      <div class="ba-divider" id="ba-divider">
-        <div class="ba-handle">
-          <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/></svg>
+      </article>
+      <article class="comparison-card">
+        <div class="comparison-copy">
+          <span class="comparison-kicker">After</span>
+          <h3>Final Cinematic Edit</h3>
         </div>
-      </div>
-      <span class="ba-label-before">Before</span>
-      <span class="ba-label-after">After</span>
+        <div class="comparison-video">
+          {% if settings.ba_after_vimeo_id %}
+          <iframe
+            src="https://player.vimeo.com/video/{{ settings.ba_after_vimeo_id }}?title=0&byline=0&portrait=0&controls=1"
+            title="Final cinematic edit"
+            loading="lazy"
+            allow="fullscreen; picture-in-picture"
+            allowfullscreen></iframe>
+          {% endif %}
+        </div>
+      </article>
     </div>
-    <p class="ba-hint">← Drag to compare →</p>
   </div>
 </section>
 
@@ -2023,9 +2372,35 @@ footer {
 // NAV SCROLL
 // =============================================
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
+const scrollProgress = document.getElementById('scroll-progress');
+const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+function updateScrollState() {
   nav.classList.toggle('scrolled', window.scrollY > 60);
+  const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+  scrollProgress.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+  const marker = window.scrollY + window.innerHeight * 0.32;
+  let activeId = 'hero';
+  document.querySelectorAll('section[id]').forEach(section => {
+    if (section.offsetTop <= marker) activeId = section.id;
+  });
+  navLinks.forEach(link => {
+    const isActive = link.getAttribute('href') === `#${activeId}`;
+    link.classList.toggle('active', isActive);
+    if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+}
+let scrollStateQueued = false;
+window.addEventListener('scroll', () => {
+  if (scrollStateQueued) return;
+  scrollStateQueued = true;
+  requestAnimationFrame(() => {
+    updateScrollState();
+    scrollStateQueued = false;
+  });
 }, { passive: true });
+updateScrollState();
 
 // =============================================
 // MOBILE MENU
@@ -2116,53 +2491,77 @@ function closeLightbox() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 // =============================================
-// SHOWREEL VIMEO LOADER
-// =============================================
-function loadShowreel() {
-  // Replace VIMEO_VIDEO_ID with your actual Vimeo ID
-  const vimeoId = '{{ settings.showreel_vimeo_id }}';
-  const frame = document.createElement('iframe');
-  frame.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0`;
-  frame.allow = 'autoplay; fullscreen; picture-in-picture';
-  frame.allowFullscreen = true;
-  const placeholder = document.getElementById('showreel-placeholder');
-  placeholder.parentNode.replaceChild(frame, placeholder);
-}
-
-// =============================================
-// BEFORE / AFTER SLIDER
+// HERO PORTRAIT PARALLAX
 // =============================================
 (function() {
-  const container = document.getElementById('ba-container');
-  const clip = document.getElementById('ba-clip');
-  const divider = document.getElementById('ba-divider');
-  const afterLayer = clip ? clip.querySelector('.ba-after') : null;
-  let isDragging = false;
+  const hero = document.getElementById('hero');
+  const portrait = document.querySelector('.hero-portrait');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const desktop = window.matchMedia('(min-width: 901px)');
+  if (!hero || !portrait || !desktop.matches || reduceMotion.matches) return;
 
-  function syncAfterWidth() {
-    if (!container || !afterLayer) return;
-    afterLayer.style.width = container.offsetWidth + 'px';
+  let frame;
+  let targetX = 0;
+  let targetY = 0;
+
+  function updatePortrait() {
+    portrait.style.translate = `${targetX}px ${targetY}px`;
+    frame = undefined;
   }
 
-  function setPosition(x) {
-    const rect = container.getBoundingClientRect();
-    let pct = Math.max(5, Math.min(95, ((x - rect.left) / rect.width) * 100));
-    clip.style.width = pct + '%';
-    divider.style.left = pct + '%';
+  function queueUpdate() {
+    if (!frame) frame = requestAnimationFrame(updatePortrait);
   }
 
-  syncAfterWidth();
-  window.addEventListener('resize', syncAfterWidth);
+  hero.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 16;
+    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 12;
+    queueUpdate();
+  });
 
-  divider.addEventListener('mousedown', e => { isDragging = true; e.preventDefault(); });
-  container.addEventListener('mousedown', e => { isDragging = true; setPosition(e.clientX); });
-  window.addEventListener('mousemove', e => { if (isDragging) setPosition(e.clientX); });
-  window.addEventListener('mouseup', () => isDragging = false);
+  hero.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+    queueUpdate();
+  });
+})();
 
-  divider.addEventListener('touchstart', e => { isDragging = true; e.preventDefault(); }, { passive: false });
-  container.addEventListener('touchstart', e => { isDragging = true; setPosition(e.touches[0].clientX); });
-  window.addEventListener('touchmove', e => { if (isDragging) setPosition(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchend', () => isDragging = false);
+// =============================================
+// SHOWREEL VIMEO LOADER
+// =============================================
+(function() {
+  const frame = document.getElementById('showreel-iframe');
+  const loading = document.getElementById('showreel-loading');
+  const section = document.getElementById('showreel');
+  if (!frame || !section) return;
+
+  let loaded = false;
+  function loadShowreel() {
+    if (loaded) return;
+    const vimeoId = (frame.dataset.vimeoId || '').trim();
+    if (!vimeoId) {
+      if (loading) loading.classList.add('hidden');
+      return;
+    }
+    loaded = true;
+    frame.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0&controls=1`;
+    frame.addEventListener('load', () => {
+      if (loading) loading.classList.add('hidden');
+    }, { once: true });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        loadShowreel();
+        observer.disconnect();
+      }
+    }, { rootMargin: '160px 0px', threshold: 0.25 });
+    observer.observe(section);
+  } else {
+    loadShowreel();
+  }
 })();
 
 // =============================================
@@ -2243,12 +2642,26 @@ document.getElementById('form-submit').addEventListener('click', async function(
   }
 });
 
-function openProjectVideo(vimeoId) {
-  const modal = document.getElementById('project-modal');
-  document.getElementById('project-iframe').src =
-    'https://player.vimeo.com/video/' + vimeoId + '?autoplay=1&title=0&byline=0&portrait=0';
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+function openProjectVideo(vimeoId, orientation = "portrait") {
+
+  const modal = document.getElementById("project-modal");
+  const wrapper = modal.querySelector(".project-modal-video");
+  const iframe = document.getElementById("project-iframe");
+
+  // Remove previous orientation
+  wrapper.classList.remove("portrait", "landscape", "square");
+
+  // Add current orientation
+  wrapper.classList.add(orientation);
+
+  // Load Vimeo video
+  iframe.src =
+    "https://player.vimeo.com/video/" +
+    vimeoId +
+    "?autoplay=1&title=0&byline=0&portrait=0";
+
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
 }
 function closeProjectModal() {
   const modal = document.getElementById('project-modal');
@@ -2256,8 +2669,11 @@ function closeProjectModal() {
   document.getElementById('project-iframe').src = '';
   document.body.style.overflow = '';
 }
-document.getElementById('project-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeProjectModal();
+document.addEventListener('DOMContentLoaded', () => {
+  const projectModal = document.getElementById('project-modal');
+  projectModal?.addEventListener('click', function(e) {
+    if (e.target === this) closeProjectModal();
+  });
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeProjectModal();

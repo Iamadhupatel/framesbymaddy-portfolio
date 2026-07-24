@@ -28,17 +28,61 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="vimeo_id">Vimeo Video ID or URL</label>
-        <input type="text" id="vimeo_id" name="vimeo_id" value="{{ project.vimeo_id if project else '' }}" placeholder="123456789 or https://vimeo.com/123456789">
-        <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">Paste the ID or a full Vimeo link. The app stores the video ID automatically.</span>
-      </div>
-      <div class="form-group">
-        <label for="sort_order">Sort Order</label>
-        <input type="number" id="sort_order" name="sort_order" value="{{ project.sort_order if project else 99 }}" min="1" max="999">
-      </div>
-    </div>
+   <div class="form-row">
+
+  <div class="form-group">
+    <label for="vimeo_id">Vimeo Video ID or URL</label>
+
+    <input
+      type="text"
+      id="vimeo_id"
+      name="vimeo_id"
+      value="{{ project.vimeo_id if project else '' }}"
+      placeholder="123456789 or https://vimeo.com/123456789">
+
+    <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">
+      Paste the ID or a full Vimeo link. The app stores the video ID automatically.
+    </span>
+  </div>
+
+  <div class="form-group">
+    <label for="orientation">Video Orientation</label>
+
+    <select id="orientation" name="orientation">
+      <option value="portrait" {% if project and project.orientation == "portrait" %}selected{% endif %}>
+        Portrait (9:16)
+      </option>
+
+      <option value="landscape" {% if project and project.orientation == "landscape" %}selected{% endif %}>
+        Landscape (16:9)
+      </option>
+
+      <option value="square" {% if project and project.orientation == "square" %}selected{% endif %}>
+        Square (1:1)
+      </option>
+    </select>
+
+    <span style="font-size:0.7rem;color:var(--silver);margin-top:0.25rem">
+      Portrait = Reels/Shorts • Landscape = Wedding Films/YouTube • Square = Social Posts
+    </span>
+  </div>
+
+</div>
+
+<div class="form-row">
+
+  <div class="form-group">
+    <label for="sort_order">Sort Order</label>
+
+    <input
+      type="number"
+      id="sort_order"
+      name="sort_order"
+      value="{{ project.sort_order if project else 99 }}"
+      min="1"
+      max="999">
+  </div>
+</div>
 
     <div class="form-row full">
       <div class="form-group">
@@ -48,9 +92,9 @@
         <div style="display:flex;gap:1rem;align-items:center;margin-top:0.75rem">
           <img
             id="thumbnail-preview"
-            src="{{ project.thumbnail if project and project.thumbnail else url_for('static', filename='img/project-thumbnail-fallback.svg') }}"
+            src="{{ project.thumbnail if project and project.thumbnail else url_for('static', filename='images/thumbnails/project-thumbnail-fallback.svg') }}"
             alt="Thumbnail preview"
-            onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}';"
+            onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/thumbnails/project-thumbnail-fallback.svg') }}';"
             style="width:160px;height:104px;object-fit:cover;border-radius:2px;border:1px solid rgba(201,168,76,0.15);background:var(--mid4)">
           <div>
             <div id="thumbnail-status" style="font-size:0.78rem;color:var(--silver);line-height:1.5">Checking thumbnail...</div>
@@ -83,7 +127,7 @@
 const thumbnailInput = document.getElementById('thumbnail');
 const thumbnailPreview = document.getElementById('thumbnail-preview');
 const thumbnailStatus = document.getElementById('thumbnail-status');
-const thumbnailFallback = "{{ url_for('static', filename='img/project-thumbnail-fallback.svg') }}";
+const thumbnailFallback = "{{ url_for('static', filename='images/thumbnails/project-thumbnail-fallback.svg') }}";
 let thumbnailTimer;
 
 function setThumbnailStatus(message, color) {

@@ -57,6 +57,7 @@ DEFAULT_PROJECTS = [
         "category": "reel",
         "thumbnail": "",
         "vimeo_id": "1199859781",
+        "orientation": "portrait",
         "sort_order": 1,
         "visible": 1,
     },
@@ -66,6 +67,7 @@ DEFAULT_PROJECTS = [
         "category": "cinematic",
         "thumbnail": "",
         "vimeo_id": "1199859781",
+        "orientation": "landscape",
         "sort_order": 2,
         "visible": 1,
     },
@@ -75,6 +77,7 @@ DEFAULT_PROJECTS = [
         "category": "commercial",
         "thumbnail": "",
         "vimeo_id": "",
+        "orientation": "landscape",
         "sort_order": 3,
         "visible": 1,
     },
@@ -84,6 +87,7 @@ DEFAULT_PROJECTS = [
         "category": "event",
         "thumbnail": "",
         "vimeo_id": "",
+        "orientation": "landscape",
         "sort_order": 4,
         "visible": 1,
     },
@@ -93,6 +97,7 @@ DEFAULT_PROJECTS = [
         "category": "lifestyle",
         "thumbnail": "",
         "vimeo_id": "",
+        "orientation": "portrait",
         "sort_order": 5,
         "visible": 1,
     },
@@ -102,6 +107,7 @@ DEFAULT_PROJECTS = [
         "category": "reel",
         "thumbnail": "",
         "vimeo_id": "",
+        "orientation": "portrait",
         "sort_order": 6,
         "visible": 1,
     },
@@ -375,6 +381,7 @@ def init_db():
     # Default site settings
     defaults = {
         "showreel_vimeo_id":    "1199859781",
+        "showreel_thumbnail":   "",
         "hero_vimeo_id":        "1200231066",
         "ba_before_vimeo_id":   "1199859780",
         "ba_after_vimeo_id":    "1199859781",
@@ -428,6 +435,8 @@ def inject_admin_context():
 def index():
     conn = get_db()
     settings     = get_settings()
+    for key in ("showreel_vimeo_id", "ba_before_vimeo_id", "ba_after_vimeo_id"):
+        settings[key] = extract_vimeo_id(settings.get(key))
     projects     = load_projects()
     photos       = conn.execute("SELECT * FROM photos   WHERE visible=1 ORDER BY sort_order").fetchall()
     testimonials = conn.execute("SELECT * FROM testimonials WHERE visible=1 ORDER BY sort_order").fetchall()
@@ -589,6 +598,7 @@ def admin_add_project():
             "category": request.form["category"],
             "thumbnail": request.form["thumbnail"],
             "vimeo_id": request.form["vimeo_id"],
+            "orientation": request.form.get("orientation", "portrait"),
             "sort_order": request.form.get("sort_order", 99),
             "visible": 1,
         })
@@ -611,6 +621,7 @@ def admin_edit_project(pid):
             "category": request.form["category"],
             "thumbnail": request.form["thumbnail"],
             "vimeo_id": request.form["vimeo_id"],
+            "orientation": request.form.get("orientation", "portrait"),
             "sort_order": request.form.get("sort_order", 99),
             "visible": 1 if request.form.get("visible") else 0,
         })
@@ -627,8 +638,6 @@ def admin_delete_project(pid):
     ]
     write_projects(projects)
     return redirect(url_for("admin_projects"))
-
-
 # ─────────────────────────────────────────────
 # ADMIN — PHOTOS
 # ─────────────────────────────────────────────
@@ -746,18 +755,41 @@ def admin_delete_testimonial(tid):
 @require_admin
 def admin_settings():
     conn = get_db()
+
     if request.method == "POST":
-        keys = ["showreel_vimeo_id","showreel_thumbnail","hero_vimeo_id","ba_before_vimeo_id","ba_after_vimeo_id",
-                "whatsapp_number","instagram_url","email","tagline",
-                "stats_projects","stats_clients","stats_experience"]
+        print("===== FORM DATA =====")
+        print(request.form)
+
+        keys = [
+            "showreel_vimeo_id",
+            "showreel_thumbnail",
+            "hero_vimeo_id",
+            "ba_before_vimeo_id",
+            "ba_after_vimeo_id",
+            "whatsapp_number",
+            "instagram_url",
+            "email",
+            "tagline",
+            "stats_projects",
+            "stats_clients",
+            "stats_experience"
+        ]
+
         for k in keys:
             v = request.form.get(k, "").strip()
             conn.execute(
                 "INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES (?, ?, datetime('now','localtime'))",
-                (k, v))
+                (k, v)
+            )
+
         conn.commit()
         flash("Settings saved successfully!")
-    settings = {r["key"]: r["value"] for r in conn.execute("SELECT key,value FROM settings").fetchall()}
+
+    settings = {
+        r["key"]: r["value"]
+        for r in conn.execute("SELECT key, value FROM settings").fetchall()
+    }
+
     conn.close()
     return render_template("admin_settings.html", settings=settings)
 
