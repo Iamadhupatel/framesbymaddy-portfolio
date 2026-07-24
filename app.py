@@ -796,6 +796,12 @@ def admin_settings():
 # Initialize database for Render/Gunicorn
 init_db()
 
+@app.route("/debug-settings")
+
+def debug_settings():
+
+    return get_settings()
+
 # ─────────────────────────────────────────────
 # ENTRY POINT
 # ─────────────────────────────────────────────
