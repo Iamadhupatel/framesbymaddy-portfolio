@@ -5,6 +5,15 @@
     "category": "reel",
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835600/thumb_1_bq8mty.jpg",
     "vimeo_id": "1212438871",
+    "sort_order": 3,
+    "visible": 1
+  },
+  {
+    "id": 13,
+    "title": "Delivered. Captured. Remembered. 🚘✨",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1788771765/thumb_1_lgcvn7.jpg",
+    "vimeo_id": "1224555879",
     "sort_order": 1,
     "visible": 1
   },
@@ -105,15 +114,6 @@
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784836151/thumb_3_x2auk6.jpg",
     "vimeo_id": "1212441606",
     "sort_order": 12,
-    "visible": 1
-  },
-  {
-    "id": 13,
-    "title": "Delivered. Captured. Remembered. 🚘✨",
-    "category": "reel",
-    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1788771765/thumb_1_lgcvn7.jpg",
-    "vimeo_id": "1224555879",
-    "sort_order": 1,
     "visible": 1
   }
 ]
