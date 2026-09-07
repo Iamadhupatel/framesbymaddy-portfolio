@@ -2,7 +2,7 @@
   {
     "id": 13,
     "title": "Delivered. Captured. Remembered. 🚘✨",
-    "category": "reel",
+    "category": "commercial",
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1788771765/thumb_1_lgcvn7.jpg",
     "vimeo_id": "1224555879",
     "sort_order": 1,
@@ -15,15 +15,6 @@
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835759/thumb_2_vscwae.jpg",
     "vimeo_id": "1212438873",
     "sort_order": 2,
-    "visible": 1
-  },
-  {
-    "id": 3,
-    "title": "Farewell Batch..2022-26❤️",
-    "category": "commercial",
-    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781906355/farewellthumb_wqkmg8.jpg",
-    "vimeo_id": "1202943521",
-    "sort_order": 13,
     "visible": 1
   },
   {
@@ -114,6 +105,15 @@
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784836151/thumb_3_x2auk6.jpg",
     "vimeo_id": "1212441606",
     "sort_order": 12,
+    "visible": 1
+  },
+  {
+    "id": 3,
+    "title": "Farewell Batch..2022-26❤️",
+    "category": "commercial",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781906355/farewellthumb_wqkmg8.jpg",
+    "vimeo_id": "1202943521",
+    "sort_order": 13,
     "visible": 1
   }
 ]
