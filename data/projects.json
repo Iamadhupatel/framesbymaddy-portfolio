@@ -1,14 +1,5 @@
 [
   {
-    "id": 10,
-    "title": "Lights. Music. Energy. Every frame tells the story 🎥✨",
-    "category": "reel",
-    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835600/thumb_1_bq8mty.jpg",
-    "vimeo_id": "1212438871",
-    "sort_order": 3,
-    "visible": 1
-  },
-  {
     "id": 13,
     "title": "Delivered. Captured. Remembered. 🚘✨",
     "category": "reel",
@@ -32,6 +23,15 @@
     "category": "commercial",
     "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1781906355/farewellthumb_wqkmg8.jpg",
     "vimeo_id": "1202943521",
+    "sort_order": 13,
+    "visible": 1
+  },
+  {
+    "id": 10,
+    "title": "Lights. Music. Energy. Every frame tells the story 🎥✨",
+    "category": "reel",
+    "thumbnail": "https://res.cloudinary.com/dlycivn73/image/upload/v1784835600/thumb_1_bq8mty.jpg",
+    "vimeo_id": "1212438871",
     "sort_order": 3,
     "visible": 1
   },
